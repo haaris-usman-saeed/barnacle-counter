@@ -87,7 +87,7 @@ table.m th:first-child, table.m td:first-child { text-align: left; }
     <section id="upsec" hidden>
       <h2>Process a photo</h2>
       <input type="file" id="file" accept="image/png,image/jpeg">
-      <label style="display:block;margin:10px 0"><input id="closeup" type="checkbox"> Experimental close-up mode (preserve original pixel scale; no green frame needed)</label>
+      <label style="display:block;margin:10px 0">Processing: <select id="processingmode"><option value="auto" selected>Auto-detect photo type (recommended)</option><option value="quadrat">Force quadrat / manual corners</option><option value="native">Force native-scale close-up (up to 1200px)</option></select></label>
       <div class="row"><button class="btn primary" id="proc">Process photo</button></div>
       <p class="small" id="upstatus">PNG or JPEG, up to 40 MB and 60 megapixels. Processing takes about 30 seconds.</p>
     </section>
@@ -378,7 +378,7 @@ function panel() {
   el('framesec').hidden = !(d.frame);
   if (d.frame) {
     const w = d.frame.warnings || [];
-    el('framemsg').innerHTML = (st.frameConfirmed ? `<p class="small">Frame ${d.frame.source === 'manual' ? 'set by hand' : 'confirmed'}.</p>` :
+    el('framemsg').innerHTML = (st.frameConfirmed ? `<p class="small">${d.frame.source === 'crop' ? 'Whole crop selected automatically; no physical quadrat.' : ('Frame ' + (d.frame.source === 'manual' ? 'set by hand' : 'confirmed') + '.')}</p>` :
       `<p class="warn">Frame found automatically. Check that the yellow outline follows the inner edge of the wire before trusting the counts.</p>`) +
       (w.length ? `<p class="warn">${w.join('<br>')}</p>` : '') +
       (d.training_photo ? `<p class="warn">${d.training_photo.message}</p>` : '');
@@ -585,7 +585,7 @@ el('load').addEventListener('change', async e => { const f = e.target.files[0]; 
 async function postPhoto(file, corners) {
   const fd = new FormData(); fd.append('image', file);
   if (corners) fd.append('corners', JSON.stringify(corners));
-  else if (el('closeup').checked) fd.append('mode', 'native');
+  else fd.append('mode', el('processingmode').value);
   const r = await fetch('api/process', {method: 'POST', body: fd}); let j = null;
   try { j = await r.json(); } catch (_) { throw {error: `Server error (${r.status}).`}; }
   if (!r.ok) throw j; return j;
@@ -593,7 +593,7 @@ async function postPhoto(file, corners) {
 el('proc').addEventListener('click', async () => {
   const f = el('file').files[0]; if (!f) { el('upstatus').textContent = 'Choose a photo first.'; return; }
   el('proc').disabled = true; el('upstatus').textContent = `Processing ${f.name}: frame, candidates, features, classifier...`;
-  try { const j = await postPhoto(f); const ix = await addPayload(j.payload, f); el('upstatus').textContent = `${f.name}: ${j.detections.length} detections in ${j.payload.timing_s ? Object.values(j.payload.timing_s).reduce((a, b) => a + b, 0).toFixed(0) : '?'} s.`; show(ix); }
+  try { const j = await postPhoto(f); const ix = await addPayload(j.payload, f); el('upstatus').textContent = `${f.name}: ${j.detections.length} detections in ${j.payload.timing_s ? Object.values(j.payload.timing_s).reduce((a, b) => a + b, 0).toFixed(0) : '?'} s. ${j.payload.mode_reason || ''}`; show(ix); }
   catch (err) {
     el('upstatus').innerHTML = `<span class="err">${err.error || 'Processing failed.'}</span>`;
     if (err.preview) startCorners(err.preview, f, -1);
@@ -603,7 +603,7 @@ function startCorners(preview, file, ix) {
   corner = {points: [], preview, file, ix};
   if (preview) { corner.previewImg = new Image(); corner.previewImg.src = preview.img; corner.previewImg.onload = () => draw(); }
   el('empty').hidden = true; cv.hidden = false;
-  el('upstatus').innerHTML += '<br><span class="small">Click four corners around the area to count, in order: top-left, top-right, bottom-right, bottom-left. For a close-up without a green frame, use experimental close-up mode instead. Esc cancels.</span>';
+  el('upstatus').innerHTML += '<br><span class="small">Click four corners around the area to count, in order: top-left, top-right, bottom-right, bottom-left. For small frame-free close-ups, Auto mode normally selects native-scale processing. Esc cancels.</span>';
   draw();
 }
 el('fmanual').addEventListener('click', () => {
