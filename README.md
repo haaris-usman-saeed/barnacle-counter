@@ -4,7 +4,7 @@ Scientists count barnacles by hand in quadrat photos: a green wire frame laid on
 
 **[Try the live application](https://haaris-usman-saeed-30--barnacle-counter-serve.us-east.modal.run/)** · [Technical report](TECHNICAL_REPORT.md) · [Deployment notes](DEPLOYMENT.md)
 
-The live demo runs on Modal with on-demand startup, so the first visit may take longer. It accepts PNG/JPEG photographs, including an experimental native-scale mode for small frame-free close-ups; the model's counts are estimates that require review.
+The live demo runs on Modal with on-demand startup, so the first visit may take longer. It accepts PNG/JPEG photographs and automatically chooses quadrat processing or experimental native-scale processing for small frame-free close-ups; users can override that choice. Counts still require review.
 
 The result is a small web app. You upload a quadrat photo; the server finds the frame, corrects the perspective, proposes candidate barnacles, scores them with a trained classifier, and opens the result in a review interface. There you accept, remove or add barnacles, calibrate the model on a few labels from that photo, and export the corrected coordinates and counts.
 
@@ -181,6 +181,8 @@ Every experiment, the failure analysis and the calibration study are in [`TECHNI
 
 ## Applying the solution to additional photographs
 
+**A design oversight I corrected.** I knew from the outset that incoming photos could have different pixel dimensions, and that some photos might not have a clearly detectable quadrat. The pipeline handled varying input dimensions and allowed manually marking frame corners. However, I initially treated every selected counting region as if it should be rescaled to the same **1600 × 1600 working area**. That 1600-pixel size was an internal normalization, **not the original dimensions of the training photographs**. I had not accounted for how strongly rescaling a tightly cropped photo would change the apparent barnacle sizes. The close-up test exposed this weakness, and only afterward did I add the native-scale alternative. This improvement was informed by the additional photo; it is not evidence from an independent evaluation of the revised method.
+
 To see what the deployed system actually does beyond the two development photographs, I uploaded two additional, previously unused photographs through the [live app](https://haaris-usman-saeed-30--barnacle-counter-serve.us-east.modal.run/). Neither was used to train or select the model. I recorded the **initial model outputs**, without manual corrections or per-photo calibration. These are observations from deployment, **not benchmark accuracy scores**: I do not have exhaustive reference counts for these photographs.
 
 ### Test 1 — New full-quadrat photograph
@@ -204,7 +206,7 @@ The dashboard labels 1,172 as the “corrected count,” but because I made no r
 
 The second photograph was a tight crop of barnacles **without a green quadrat frame**. I selected the image area manually and tried the ordinary quadrat processing path. This returned only **6 selected detections and 2 suggestions**, despite many visible barnacles. Expanding a small crop to the same 1600 × 1600 rectified working size as a full quadrat changes the apparent size of each barnacle. That is a plausible source of failure because candidate detection and classification were tuned on full quadrat images, but I have not isolated scale as the sole cause.
 
-Rather than retraining C7 on this additional photograph, I added an optional **experimental native-scale close-up mode** and tried the same crop again.
+Rather than retraining C7 on this additional photograph, I added an **experimental native-scale close-up mode** and tried the same crop again.
 
 **How I applied the proposed fix:**
 
@@ -213,6 +215,7 @@ Rather than retraining C7 on this additional photograph, I added an optional **e
 3. An **88-pixel reflected border** supplies context for local filters without creating a large black canvas or artificial high-contrast black edges. The extra border is not part of the counted area.
 4. Candidate locations are restricted to the original crop and mapped directly back to its pixel coordinates. The app uses the **same saved C7 classifier and threshold**, with no additional training.
 5. Standard full-quadrat processing remains a separate, unchanged mode.
+6. After observing this failure, I made the app **inspect each uploaded photo first** and route it automatically to the framed or native-scale pipeline. A processing selector remains available for overrides.
 
 | Measurement | Original quadrat processing | Native-scale close-up mode |
 |---|---:|---:|
@@ -231,7 +234,9 @@ The second run located many more plausible barnacle centers, with visibly more d
 
 This test surfaced a failure that the two development photographs did not reveal: **image framing and object scale are part of the model's input distribution**. The native-scale experiment improved the number and visual coverage of predictions on one close-up, without new training, but it did not establish that the model counts close-ups reliably.
 
-The user interface therefore exposes both processing modes, retains the review queue, and labels uncalibrated counts as estimates. For close-ups, the grid organizes relative positions within the crop; it is **not** a physical quadrat or an area-density measurement. I would next validate the approach on several independent close-ups with exhaustive point annotations before making stronger performance claims.
+After this observation, I also updated the user interface to **select a processing mode automatically**: it first tries to locate the green quadrat; if a small (up to 1200 pixels per side) photo has no detectable frame, it selects native-scale close-up processing. Larger frameless images still ask for manual corners, and the user can explicitly override automatic selection. A detected green frame continues to use standard perspective normalization. This routing rule is a heuristic, not a learned classifier for photo type.
+
+The user interface retains the review queue and labels uncalibrated counts as estimates. For close-ups, the grid organizes relative positions within the crop; it is **not** a physical quadrat or an area-density measurement. I would next validate the approach on several independent close-ups with exhaustive point annotations before making stronger performance claims.
 
 ## Honest limitations
 
