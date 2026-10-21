@@ -196,6 +196,16 @@ After deployment, I uploaded an additional full-frame quadrat photograph to the 
 
 **Interpretation:** The model produced 1,172 selected detections on a new input, with another 293 candidates suggested for possible inclusion. No review edits were made, so the displayed “corrected” count remains the initial model count—not a human-verified total. Since no reference count or calibrated estimate is available for this photograph, its true error, precision, and recall are unknown. The result demonstrates that the deployed pipeline returned detections on an additional photograph; it does **not** demonstrate counting accuracy or generalization quantitatively. The photograph was not added to the training or model-selection data.
 
+### Visual check of the live output
+
+In the screenshot from this additional upload, the app reports a **confirmed frame** and **1,172 selected detections in 13 seconds**. The yellow quadrat outline follows the central frame opening, and many colored detection markers appear near visible barnacle openings. Some nearby openings have no selected marker, and there are unselected suggestions; this is a qualitative visual inspection, not a verified count. No review or calibration was performed.
+
+### Smaller close-up images (500 × 500 pixels)
+
+The app accepts PNG and JPEG images whose shortest side is **at least 500 pixels**. Photographs without a visible green quadrat frame need an area specified manually: after upload, click the four corners around the area you want counted, in top-left, top-right, bottom-right, bottom-left order. For a cropped close-up, choose points near the four image corners.
+
+The detector was designed and trained on larger framed quadrat images. Cropped close-ups may have a different apparent barnacle scale after rectification, so their predictions should be treated as exploratory estimates, not validated performance.
+
 ## Honest limitations
 
 - **Only two photos.** None of these numbers predicts performance on other photos, species or lighting.
