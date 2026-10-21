@@ -21,7 +21,7 @@ import cv2
 import numpy as np
 
 from .frame import Frame, detect, CORNER_NAMES
-from .rectify import rectify
+from .rectify import rectify, native_rectify
 from .candidate_detection import CandidateParams, score_maps, detect_candidates, hough_candidates, merge_candidates
 from .features import candidate_features
 from .ml import DuplicateIndex, select
@@ -185,14 +185,26 @@ def features_for(rect, c, maps, art):
     return X
 
 
-def run(img, art, corners=None, k_calibration=80, seed=0, limits: Limits = Limits(), name="upload"):
+def run(img, art, corners=None, k_calibration=80, seed=0, limits: Limits = Limits(), name="upload", mode="quadrat"):
     """Process one photo. Returns (payload for the viewer, detection records, timings)."""
     t = {}
     t0 = time.time()
-    frame = find_frame(img, corners, limits)
+    if mode == "native":
+        if corners is not None:
+            raise InputError("Native close-up mode uses the whole photograph; do not supply frame corners.")
+        h, w = img.shape[:2]
+        if max(h, w) > 1200:
+            raise InputError("Native close-up mode accepts images up to 1200 px per side. Use quadrat mode for larger photographs.")
+        frame = Frame(np.array([[0, 0], [w - 1, 0], [w - 1, h - 1], [0, h - 1]], float),
+                      (w, h), "crop", {"warnings": ["Experimental close-up mode; whole crop is the counting area; no physical quadrat detected."]})
+    elif mode == "quadrat":
+        frame = find_frame(img, corners, limits)
+    else:
+        raise InputError("mode must be 'quadrat' or 'native'.")
     t["frame_s"] = time.time() - t0
     t0 = time.time()
-    rect = rectify(img, frame, size=art["rect_size"])
+    rect = (native_rectify(img, frame, size=art["rect_size"])
+            if mode == "native" else rectify(img, frame, size=art["rect_size"]))
     c, maps = generate(rect, art)
     t["candidates_s"] = time.time() - t0
     if len(c["x"]) == 0:
@@ -227,6 +239,7 @@ def run(img, art, corners=None, k_calibration=80, seed=0, limits: Limits = Limit
     payload = viewer_payload(img, frame, name, ids, xy, uv, r, score, sig, dup, thr, sidx, sw, sstrat, art)
     payload["timing_s"] = {k: round(v, 2) for k, v in t.items()}
     payload["image_size"] = [int(img.shape[1]), int(img.shape[0])]
+    payload["processing_mode"] = mode
     payload["training_photo"] = recognize(img)      # None, or {level, photo, message, definitive, evidence}
     return payload, records, t
 
@@ -259,7 +272,7 @@ def viewer_payload(img, frame, name, ids, xy, uv, r, score, sig, dup, thr, sidx,
                "stratum_sizes": np.bincount(sstrat, minlength=int(sstrat.max()) + 1).tolist()},
         "model": {"trained_on": ", ".join(art["trained_on"]), "kind": art["model_kind"], "version": art["version"],
                   "variant": art["variant"]},
-        "frame": {"source": frame.source, "warnings": q.get("warnings", []), "confirmed": frame.source == "manual",
+        "frame": {"source": frame.source, "warnings": q.get("warnings", []), "confirmed": frame.source in ("manual", "crop"),
                   "corners_px": {n: [round(float(a), 2), round(float(b), 2)] for n, (a, b) in zip(CORNER_NAMES, frame.corners)}},
         "upload": True,
     }
