@@ -51,10 +51,14 @@ The image:
 | `BARNACLE_MODEL` | `models/barnacle_detector.pkl` | Model artifact path |
 | `LOG_LEVEL` | INFO | Log level |
 
+## Automatic image-type routing
+
+The default `mode=auto` tries to locate the green quadrat first. When no frame can be found in a photo at most 1200 px wide and high, it treats the whole photo as an experimental native-scale crop. If no frame is found in larger photos, it requests manual corners instead. The UI provides `auto`, `quadrat`, and `native` choices. Automatic selection is heuristic and does not certify a true quadrat or accurate detections.
+
 ## Upload safety
 
 - **Formats:** only PNG and JPEG are accepted. They are identified by file signature, not by name or content type. TIFF, BMP and WebP were accepted earlier and are now refused.
-- **Size limits:** the image dimensions are read from the file header before any decoding, and the upload is rejected if it is over 60 MP or under 600 px on the short side. Uploads are capped at 40 MB. The minimum short side is 500 px (including 500 × 500 close-ups). If the green frame is absent, the reviewer must manually mark four corners around the area to count; this does not provide a verified scale or guaranteed accuracy.
+- **Size limits:** the image dimensions are read from the file header before any decoding, and the upload is rejected if it is over 60 MP or under 500 px on the short side. Uploads are capped at 40 MB. Auto mode first attempts quadrat-frame detection; when the frame cannot be detected and the image is no larger than 1200 px per side, the entire crop is used at native pixel scale. Larger images without a detected frame require manual corners. Mode can be overridden; native mode is experimental and does not guarantee accuracy.
 - **Corrupt files:** a corrupted or truncated file, or one whose header disagrees with its pixels, gets a 400 with a plain explanation.
 - **Memory only:** uploads are held in memory and decoded only by OpenCV. This code never writes them to disk and never executes them. Werkzeug may spool a large request body to a temporary file; the app closes the upload stream immediately after reading, which deletes it.
 - **Logging:** logs contain a request id, sizes, dimensions, timings and status, never image data.
