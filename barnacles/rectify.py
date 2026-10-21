@@ -45,3 +45,43 @@ def rectify(img, frame, size=1600, margin=48):
     out = cv2.warpPerspective(img, M, (size + 2 * margin, size + 2 * margin),
                               flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REFLECT)
     return Rectified(out, size, margin, M, frame)
+
+
+@dataclass
+class NativeRectified:
+    """Native-pixel close-up view with reflected context (no magnification).
+
+    Candidate radii retain the trained 1600-reference pixel values. Only the
+    photographed region plus a reflection halo is processed; this is equivalent
+    to ignoring a large empty canvas, without artificial black-border edges.
+    """
+    image: np.ndarray
+    frame: object
+    size: int = 1600
+    margin: int = 88
+
+    def uv_to_rect(self, uv):
+        return self.frame.to_image(uv) + self.margin
+
+    def rect_to_uv(self, xy):
+        return self.frame.to_norm(self.rect_to_image(xy))
+
+    def rect_to_image(self, xy):
+        return np.asarray(xy, float) - self.margin
+
+    def image_to_rect(self, xy):
+        return np.asarray(xy, float) + self.margin
+
+    def px_per_rect_px(self):
+        return 1.0
+
+
+def native_rectify(img, frame, size=1600, margin=88):
+    """Reflect pixels outside the real crop to preserve local feature context.
+
+    The recorded ROI itself is never resized. Proposals outside it are excluded
+    by the existing rect_to_uv/inside logic in candidate generation.
+    """
+    out = cv2.copyMakeBorder(img, margin, margin, margin, margin,
+                             cv2.BORDER_REFLECT_101)
+    return NativeRectified(out, frame, size, margin)
