@@ -189,6 +189,9 @@ def process():
             raise ValueError
     except (ValueError, TypeError):
         return error("corners must be four [x, y] number pairs: top-left, top-right, bottom-right, bottom-left.", 400)
+    mode = request.form.get("mode") or "quadrat"
+    if mode not in ("quadrat", "native"):
+        return error("mode must be quadrat or native.", 400)
     try:
         k = int(request.form.get("k") or 80)
         if not 10 <= k <= 400:
@@ -207,9 +210,11 @@ def process():
         r.headers["Retry-After"] = "30"
         return r
     try:
-        payload, records, t = run(img, _MODEL["artifact"], corners=corners, k_calibration=k, name=name)
+        payload, records, t = run(img, _MODEL["artifact"], corners=corners, k_calibration=k, name=name, mode=mode)
     except FrameError as e:
         return error(str(e), 422, preview=preview(img), image_size=[int(img.shape[1]), int(img.shape[0])])
+    except InputError as e:
+        return error(str(e), e.status)
     except MemoryError:
         log.error("rid=%s out of memory", g.rid)
         return error("The server ran out of memory processing this photo. Try a smaller photo.", 503)
