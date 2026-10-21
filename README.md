@@ -210,6 +210,16 @@ The detector was designed and trained on larger framed quadrat images. Cropped c
 
 This suggests a significant limitation when transferring from full quadrats to tight close-ups: after every selected area is rectified to 1600 × 1600 pixels, the relevant barnacle sizes can shift outside the scale distribution and features the detector learned. It is a plausible explanation, **not a diagnosed single root cause**. Simply allowing smaller uploaded files does not fix this model mismatch. The photo was not used for training or model selection, and the poor result is included here deliberately.
 
+### Experimental native-scale close-up mode
+
+The upload interface now has an optional **Experimental close-up mode** for small photographs without a visible quadrat frame. This mode treats the full crop as the counting area and **preserves its original pixel scale** instead of stretching 500×500 pixels to the usual 1600×1600 rectified area.
+
+It processes the actual crop with an 88-pixel *reflected* context margin. This avoids a huge black canvas and prevents artificial black borders from being mistaken for features. Candidate centers outside the original crop are excluded; detection coordinates map directly back to the original pixels. The existing full-quadrat mode remains unchanged.
+
+**How to try it:** For an image between 500 and 1200 pixels on each side, check **Experimental close-up mode**, upload, and process. You do not need to mark four corners. Turn off the checkbox for regular quadrat photographs. The mode uses the existing trained C7 detector **without retraining**; its performance on new close-ups has not yet been independently evaluated.
+
+The earlier close-up result of **6 selected detections and 2 suggestions** was recorded using the regular quadrat mode, before native-scale processing. It remains an honest failure case, not a metric of the new mode. Any new count should be documented separately after testing and should not be called accurate without exhaustive reference labels.
+
 ## Honest limitations
 
 - **Only two photos.** None of these numbers predicts performance on other photos, species or lighting.
