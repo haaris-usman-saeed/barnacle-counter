@@ -43,6 +43,23 @@ class TestUploadValidation(unittest.TestCase):
         with self.assertRaises(InputError):
             decode_image(png(np.zeros((499, 500, 3), np.uint8)))
 
+    def test_500_px_png_and_native_coordinate_mapping(self):
+        from barnacles.rectify import native_rectify
+        from barnacles.frame import Frame
+        img = np.random.default_rng(10).integers(0, 255, (500, 500, 3), dtype=np.uint8)
+        dec, _ = decode_image(png(img))
+        self.assertEqual(dec.shape, img.shape)
+        frame = Frame(np.array([[0,0], [499,0], [499,499], [0,499]], float), (500,500), "crop")
+        rect = native_rectify(dec, frame)
+        self.assertEqual(rect.size, 1600)
+        self.assertEqual(rect.image.shape[:2], (676, 676))
+        np.testing.assert_array_equal(rect.image[88:588, 88:588], img)
+        pts = np.array([[10.,20.], [250.,250.], [499.,499.]])
+        np.testing.assert_allclose(rect.rect_to_image(rect.image_to_rect(pts)), pts)
+        np.testing.assert_allclose(rect.rect_to_uv(rect.image_to_rect(pts)), frame.to_norm(pts))
+        with self.assertRaises(InputError):
+            decode_image(png(np.zeros((499, 500, 3), np.uint8)))
+
     def test_rejects_other_formats_and_bombs(self):
         img = np.zeros((700, 900, 3), np.uint8)
         for ext in (".tiff", ".bmp"):
@@ -88,6 +105,23 @@ class TestUploadValidation(unittest.TestCase):
 @unittest.skipUnless(DEFAULT_ARTIFACT.exists(), "model artifact not available")
 class TestSyntheticInference(unittest.TestCase):
     """End-to-end inference on a synthetic quadrat photo: runs without the development data."""
+
+    def test_synthetic_native_closeup(self):
+        img = np.zeros((500, 500, 3), np.uint8)
+        img[:] = (65, 65, 65)
+        for y in range(48, 450, 30):
+            for x in range(48, 450, 30):
+                cv2.circle(img, (x,y), 10, (220,220,220), -1)
+                cv2.circle(img, (x,y), 5, (85,85,85), -1)
+        payload, records, timing = run(img, load_artifact(), mode="native", name="synthetic_crop")
+        self.assertEqual(payload["processing_mode"], "native")
+        self.assertEqual(payload["frame"]["source"], "crop")
+        self.assertTrue(payload["frame"]["confirmed"])
+        self.assertGreater(len(payload["c"]["x"]), 0)
+        for c in records:
+            self.assertTrue(0 <= c["x"] <= 499 and 0 <= c["y"] <= 499)
+        with self.assertRaises(InputError):
+            run(img, load_artifact(), mode="native", corners=[[0,0], [499,0], [499,499], [0,499]])
 
     def test_synthetic_photo(self):
         img, truth = synthetic_quadrat(seed=4, H=1200, W=1600)
