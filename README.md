@@ -204,7 +204,11 @@ In the screenshot from this additional upload, the app reports a **confirmed fra
 
 The app accepts PNG and JPEG images whose shortest side is **at least 500 pixels**. Photographs without a visible green quadrat frame need an area specified manually: after upload, click the four corners around the area you want counted, in top-left, top-right, bottom-right, bottom-left order. For a cropped close-up, choose points near the four image corners.
 
-The detector was designed and trained on larger framed quadrat images. Cropped close-ups may have a different apparent barnacle scale after rectification, so their predictions should be treated as exploratory estimates, not validated performance.
+The detector was designed and trained on larger framed quadrat images. Cropped close-ups can have a different apparent barnacle scale after rectification, so their predictions should be treated as exploratory estimates, not validated performance.
+
+**Observed failure on an additional 500 × 500 close-up.** In a separate live upload of a cropped barnacle photograph without the original quadrat frame, the app returned **6 selected detections** and **2 suggestions in the review queue**, with no calibration or manual edits. Its displayed “corrected count” was therefore **6**, but that is only the unchanged model output. Visual inspection shows many more barnacles than six, so the result is a clear qualitative undercount. There is no exhaustive reference annotation for this close-up, so a numerical error percentage or recall cannot be calculated. The two suggestions reported by the interface are review suggestions, not necessarily the entire set of model-generated candidates.
+
+This suggests a significant limitation when transferring from full quadrats to tight close-ups: after every selected area is rectified to 1600 × 1600 pixels, the relevant barnacle sizes can shift outside the scale distribution and features the detector learned. It is a plausible explanation, **not a diagnosed single root cause**. Simply allowing smaller uploaded files does not fix this model mismatch. The photo was not used for training or model selection, and the poor result is included here deliberately.
 
 ## Honest limitations
 
@@ -213,6 +217,7 @@ The detector was designed and trained on larger framed quadrat images. Cropped c
 - **Annotations define the target.** The masks skip empty shells, and the second photo is incompletely annotated, so measured recall and precision follow that policy.
 - **The deployed model saw both photos.** It is trained on both development photos, so processing either of them in the app gives optimistic results. The app warns: definitively for exact copies, and as a "likely" match for resized or recompressed ones. Crops and strong edits may not be recognized.
 - **Dense clusters lose recall.** About 1% to 2% of annotations are never proposed as candidates.
+- **Tight close-ups can fail badly.** An additional 500 × 500 crop received only 6 selected detections despite many visible barnacles. Scale and appearance transfer to crops have not been solved.
 
 ## Run it
 
