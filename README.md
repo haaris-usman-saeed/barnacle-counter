@@ -179,6 +179,23 @@ These are cross-photo results (the model never saw the photo it is scored on), a
 
 Every experiment, the failure analysis and the calibration study are in [`TECHNICAL_REPORT.md`](TECHNICAL_REPORT.md). The full model table is in [`experiments/classifier_table.md`](experiments/classifier_table.md).
 
+## Live prediction on an additional photograph (not used for model development)
+
+After deployment, I uploaded an additional full-frame quadrat photograph to the [live application](https://haaris-usman-saeed-30--barnacle-counter-serve.us-east.modal.run/) and recorded its initial output. This is an inference-only observation, not an accuracy benchmark; this photograph has no independently verified count recorded here.
+
+| Measure | Observed result |
+|---|---:|
+| Initial selected model detections | **1,172** |
+| Manually removed detections | 0 |
+| Accepted additional suggestions | 0 |
+| Manually added detections | 0 |
+| Displayed corrected count | **1,172** |
+| Reviewed items | 0 |
+| Remaining review queue | 1,115 selected detections; 293 unselected suggestions |
+| Calibration | Not performed; default threshold from development photos |
+
+**Interpretation:** The model produced 1,172 selected detections on a new input, with another 293 candidates suggested for possible inclusion. No review edits were made, so the displayed “corrected” count remains the initial model count—not a human-verified total. Since no reference count or calibrated estimate is available for this photograph, its true error, precision, and recall are unknown. The result demonstrates that the deployed pipeline returned detections on an additional photograph; it does **not** demonstrate counting accuracy or generalization quantitatively. The photograph was not added to the training or model-selection data.
+
 ## Honest limitations
 
 - **Only two photos.** None of these numbers predicts performance on other photos, species or lighting.
