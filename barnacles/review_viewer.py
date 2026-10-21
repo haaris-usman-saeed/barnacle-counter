@@ -87,6 +87,7 @@ table.m th:first-child, table.m td:first-child { text-align: left; }
     <section id="upsec" hidden>
       <h2>Process a photo</h2>
       <input type="file" id="file" accept="image/png,image/jpeg">
+      <label style="display:block;margin:10px 0"><input id="closeup" type="checkbox"> Experimental close-up mode (preserve original pixel scale; no green frame needed)</label>
       <div class="row"><button class="btn primary" id="proc">Process photo</button></div>
       <p class="small" id="upstatus">PNG or JPEG, up to 40 MB and 60 megapixels. Processing takes about 30 seconds.</p>
     </section>
@@ -582,7 +583,9 @@ function loadSession(s) {
 el('load').addEventListener('change', async e => { const f = e.target.files[0]; if (f) loadSession(JSON.parse(await f.text())); e.target.value = ''; });
 // ---- upload and server processing (application mode)
 async function postPhoto(file, corners) {
-  const fd = new FormData(); fd.append('image', file); if (corners) fd.append('corners', JSON.stringify(corners));
+  const fd = new FormData(); fd.append('image', file);
+  if (corners) fd.append('corners', JSON.stringify(corners));
+  else if (el('closeup').checked) fd.append('mode', 'native');
   const r = await fetch('api/process', {method: 'POST', body: fd}); let j = null;
   try { j = await r.json(); } catch (_) { throw {error: `Server error (${r.status}).`}; }
   if (!r.ok) throw j; return j;
@@ -600,7 +603,7 @@ function startCorners(preview, file, ix) {
   corner = {points: [], preview, file, ix};
   if (preview) { corner.previewImg = new Image(); corner.previewImg.src = preview.img; corner.previewImg.onload = () => draw(); }
   el('empty').hidden = true; cv.hidden = false;
-  el('upstatus').innerHTML += '<br><span class="small">Click four corners around the area to count, in order: top-left, top-right, bottom-right, bottom-left. For a close-up without a green frame, select the image edges. Esc cancels.</span>';
+  el('upstatus').innerHTML += '<br><span class="small">Click four corners around the area to count, in order: top-left, top-right, bottom-right, bottom-left. For a close-up without a green frame, use experimental close-up mode instead. Esc cancels.</span>';
   draw();
 }
 el('fmanual').addEventListener('click', () => {
