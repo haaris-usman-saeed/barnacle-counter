@@ -54,7 +54,7 @@ The image:
 ## Upload safety
 
 - **Formats:** only PNG and JPEG are accepted. They are identified by file signature, not by name or content type. TIFF, BMP and WebP were accepted earlier and are now refused.
-- **Size limits:** the image dimensions are read from the file header before any decoding, and the upload is rejected if it is over 60 MP or under 600 px on the short side. Uploads are capped at 40 MB.
+- **Size limits:** the image dimensions are read from the file header before any decoding, and the upload is rejected if it is over 60 MP or under 600 px on the short side. Uploads are capped at 40 MB. The minimum short side is 500 px (including 500 × 500 close-ups). If the green frame is absent, the reviewer must manually mark four corners around the area to count; this does not provide a verified scale or guaranteed accuracy.
 - **Corrupt files:** a corrupted or truncated file, or one whose header disagrees with its pixels, gets a 400 with a plain explanation.
 - **Memory only:** uploads are held in memory and decoded only by OpenCV. This code never writes them to disk and never executes them. Werkzeug may spool a large request body to a temporary file; the app closes the upload stream immediately after reading, which deletes it.
 - **Logging:** logs contain a request id, sizes, dimensions, timings and status, never image data.
