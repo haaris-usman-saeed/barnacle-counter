@@ -600,7 +600,7 @@ function startCorners(preview, file, ix) {
   corner = {points: [], preview, file, ix};
   if (preview) { corner.previewImg = new Image(); corner.previewImg.src = preview.img; corner.previewImg.onload = () => draw(); }
   el('empty').hidden = true; cv.hidden = false;
-  el('upstatus').innerHTML += '<br><span class="small">Click the four inner corners of the frame in order: top-left, top-right, bottom-right, bottom-left. Esc cancels.</span>';
+  el('upstatus').innerHTML += '<br><span class="small">Click four corners around the area to count, in order: top-left, top-right, bottom-right, bottom-left. For a close-up without a green frame, select the image edges. Esc cancels.</span>';
   draw();
 }
 el('fmanual').addEventListener('click', () => {
