@@ -2,6 +2,10 @@
 
 Scientists count barnacles by hand in quadrat photos: a green wire frame laid on the rock, photographed from above, with hundreds to thousands of barnacles inside it. My goal for the DALI challenge was not to replace that person. It was to take the repetitive part off their hands: let a model propose every barnacle, show the scientist where it is unsure, and make correcting it fast.
 
+**[Try the live application](https://haaris-usman-saeed-30--barnacle-counter-serve.us-east.modal.run/)** · [Technical report](TECHNICAL_REPORT.md) · [Deployment notes](DEPLOYMENT.md)
+
+The live demo runs on Modal with on-demand startup, so the first visit may take longer. It accepts PNG/JPEG quadrat photographs, and the model's counts are estimates that require review.
+
 The result is a small web app. You upload a quadrat photo; the server finds the frame, corrects the perspective, proposes candidate barnacles, scores them with a trained classifier, and opens the result in a review interface. There you accept, remove or add barnacles, calibrate the model on a few labels from that photo, and export the corrected coordinates and counts.
 
 ![The app after processing an uploaded photo](docs/screenshots/app_after_upload.png)
@@ -194,7 +198,7 @@ python app.py                         # open http://127.0.0.1:8000 and upload a 
 
 The trained model (`models/barnacle_detector.pkl`) and the training-photo fingerprints ship with the code. Nothing else is needed to process uploads.
 
-Deployment: `gunicorn -c gunicorn.conf.py app:app`, or the `Dockerfile` / `Procfile`. Settings, resource limits and what is still unverified are in [`DEPLOYMENT.md`](DEPLOYMENT.md).
+Deployment: the [live demo](https://haaris-usman-saeed-30--barnacle-counter-serve.us-east.modal.run/) is hosted on Modal using [`modal_app.py`](modal_app.py) and the existing Dockerfile. Re-deploy with `modal deploy modal_app.py` after `modal setup`. For other platforms use `gunicorn -c gunicorn.conf.py app:app`, the `Dockerfile`, or `Procfile`; see [`DEPLOYMENT.md`](DEPLOYMENT.md) for resource requirements and limitations.
 
 Research workflow: put the challenge photos and masks in `data/` (or set `BARNACLE_DATA`), then:
 
