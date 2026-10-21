@@ -1,0 +1,82 @@
+{
+ "img1.png": {
+  "n_annotations": 1731,
+  "match_radius_rect_px": 10.129621651705095,
+  "LoG bright, contrast-normalized": {
+   "n_candidates": 2846,
+   "recall_all": 0.36683997689196995,
+   "best_f1_same_photo": 0.2774743281625519,
+   "seconds": 3.4
+  },
+  "LoG bright, raw grey": {
+   "n_candidates": 2860,
+   "recall_all": 0.36626227614095896,
+   "best_f1_same_photo": 0.27619255064256154,
+   "seconds": 3.4
+  },
+  "LoG dark, contrast-normalized": {
+   "n_candidates": 2103,
+   "recall_all": 0.12767186597342575,
+   "best_f1_same_photo": 0.11528429838288994,
+   "seconds": 3.2
+  },
+  "Hough circles": {
+   "n_candidates": 16204,
+   "recall_all": 0.997689196995956,
+   "best_f1_same_photo": 0.41843515541264736,
+   "seconds": 1.8
+  },
+  "ring only": {
+   "n_candidates": 19653,
+   "recall_all": 0.9930675909878682,
+   "best_f1_same_photo": 0.22972119462239465,
+   "seconds": 27.2
+  },
+  "ring + LoG bright (chosen)": {
+   "n_candidates": 13638,
+   "recall_all": 0.9612940496822646,
+   "best_f1_same_photo": 0.2500881212548467,
+   "seconds": 29.7
+  }
+ },
+ "img2.png": {
+  "n_annotations": 397,
+  "match_radius_rect_px": 14.94918524841942,
+  "LoG bright, contrast-normalized": {
+   "n_candidates": 1983,
+   "recall_all": 0.7732997481108312,
+   "best_f1_same_photo": 0.3699825479930192,
+   "seconds": 3.3
+  },
+  "LoG bright, raw grey": {
+   "n_candidates": 2003,
+   "recall_all": 0.7758186397984886,
+   "best_f1_same_photo": 0.37294015611448394,
+   "seconds": 3.5
+  },
+  "LoG dark, contrast-normalized": {
+   "n_candidates": 3812,
+   "recall_all": 0.6523929471032746,
+   "best_f1_same_photo": 0.16689466484268126,
+   "seconds": 3.3
+  },
+  "Hough circles": {
+   "n_candidates": 13210,
+   "recall_all": 1.0,
+   "best_f1_same_photo": 0.21864520456069753,
+   "seconds": 4.7
+  },
+  "ring only": {
+   "n_candidates": 19141,
+   "recall_all": 1.0,
+   "best_f1_same_photo": 0.2243542435424354,
+   "seconds": 27.1
+  },
+  "ring + LoG bright (chosen)": {
+   "n_candidates": 11481,
+   "recall_all": 1.0,
+   "best_f1_same_photo": 0.21693735498839908,
+   "seconds": 29.7
+  }
+ }
+}

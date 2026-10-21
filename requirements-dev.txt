@@ -1,0 +1,6 @@
+# Research scripts and tests. The tests use only the standard library's unittest;
+# pytest works too but is not required.
+-r requirements.txt
+matplotlib==3.10.8         # figures in run_phase*.py and scripts/
+# Optional, for driving the browser interface headlessly (screenshots, UI checks):
+# playwright==1.56.0       # then: python -m playwright install chromium

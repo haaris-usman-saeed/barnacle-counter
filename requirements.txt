@@ -1,0 +1,9 @@
+# Runtime dependencies of the web app (pinned to the versions tested here, Python 3.12).
+numpy==2.4.4
+scipy==1.17.1
+opencv-python-headless==4.13.0.92
+scikit-image==0.26.0
+scikit-learn==1.8.0        # the saved model is a pickled scikit-learn 1.8 estimator: keep this exact
+Flask==3.1.3
+Werkzeug==3.1.7
+gunicorn==23.0.0           # NOT installed or tested in the development environment; any recent 2x version should work

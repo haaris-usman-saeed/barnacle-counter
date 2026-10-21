@@ -1,0 +1,134 @@
+{
+ "img1.png": {
+  "before_C0": {
+   "calibrated_seed0": {
+    "n_annotations": 1731,
+    "n_detections": 1278,
+    "n_matched": 810,
+    "n_missed_annotations": 921,
+    "n_unmatched_detections": 468,
+    "annotated_recall": 0.4679376083188908,
+    "annotation_precision_lower_bound": 0.6338028169014085,
+    "f1_vs_annotations": 0.5383848454636092,
+    "count_minus_annotations": -453,
+    "count_ratio": 0.7383015597920277,
+    "match_dist_median_px": 4.455911525852985,
+    "match_dist_p90_px": 7.0683551076284505,
+    "match_radius_px": 8.97398468933946
+   },
+   "at_annotated_count": {
+    "n_annotations": 1731,
+    "n_detections": 1731,
+    "n_matched": 983,
+    "n_missed_annotations": 748,
+    "n_unmatched_detections": 748,
+    "annotated_recall": 0.5678798382437897,
+    "annotation_precision_lower_bound": 0.5678798382437897,
+    "f1_vs_annotations": 0.5678798382437897,
+    "count_minus_annotations": 0,
+    "count_ratio": 1.0,
+    "match_dist_median_px": 4.459741891290528,
+    "match_dist_p90_px": 7.184077801445183,
+    "match_radius_px": 8.97398468933946
+   }
+  },
+  "after_C7": {
+   "calibrated_seed0": {
+    "n_annotations": 1731,
+    "n_detections": 1092,
+    "n_matched": 893,
+    "n_missed_annotations": 838,
+    "n_unmatched_detections": 199,
+    "annotated_recall": 0.5158867706528019,
+    "annotation_precision_lower_bound": 0.8177655677655677,
+    "f1_vs_annotations": 0.63266029047113,
+    "count_minus_annotations": -639,
+    "count_ratio": 0.6308492201039861,
+    "match_dist_median_px": 4.439934326615479,
+    "match_dist_p90_px": 7.520012088532462,
+    "match_radius_px": 8.97398468933946
+   },
+   "at_annotated_count": {
+    "n_annotations": 1731,
+    "n_detections": 1731,
+    "n_matched": 1210,
+    "n_missed_annotations": 521,
+    "n_unmatched_detections": 521,
+    "annotated_recall": 0.6990179087232813,
+    "annotation_precision_lower_bound": 0.6990179087232813,
+    "f1_vs_annotations": 0.6990179087232813,
+    "count_minus_annotations": 0,
+    "count_ratio": 1.0,
+    "match_dist_median_px": 4.6435524505300725,
+    "match_dist_p90_px": 7.6222683570957175,
+    "match_radius_px": 8.97398468933946
+   }
+  }
+ },
+ "img2.png": {
+  "before_C0": {
+   "calibrated_seed0": {
+    "n_annotations": 397,
+    "n_detections": 306,
+    "n_matched": 126,
+    "n_missed_annotations": 271,
+    "n_unmatched_detections": 180,
+    "annotated_recall": 0.31738035264483627,
+    "annotation_precision_lower_bound": 0.4117647058823529,
+    "f1_vs_annotations": 0.3584637268847795,
+    "count_minus_annotations": -91,
+    "count_ratio": 0.7707808564231738,
+    "match_dist_median_px": 6.478013964350119,
+    "match_dist_p90_px": 12.951805505248945,
+    "match_radius_px": 15.117754405994354
+   },
+   "at_annotated_count": {
+    "n_annotations": 397,
+    "n_detections": 397,
+    "n_matched": 154,
+    "n_missed_annotations": 243,
+    "n_unmatched_detections": 243,
+    "annotated_recall": 0.3879093198992443,
+    "annotation_precision_lower_bound": 0.3879093198992443,
+    "f1_vs_annotations": 0.3879093198992443,
+    "count_minus_annotations": 0,
+    "count_ratio": 1.0,
+    "match_dist_median_px": 6.4961982487620284,
+    "match_dist_p90_px": 12.909982570700524,
+    "match_radius_px": 15.117754405994354
+   }
+  },
+  "after_C7": {
+   "calibrated_seed0": {
+    "n_annotations": 397,
+    "n_detections": 130,
+    "n_matched": 79,
+    "n_missed_annotations": 318,
+    "n_unmatched_detections": 51,
+    "annotated_recall": 0.19899244332493704,
+    "annotation_precision_lower_bound": 0.6076923076923076,
+    "f1_vs_annotations": 0.2998102466793169,
+    "count_minus_annotations": -267,
+    "count_ratio": 0.327455919395466,
+    "match_dist_median_px": 7.27117327176686,
+    "match_dist_p90_px": 12.1122878368704,
+    "match_radius_px": 15.117754405994354
+   },
+   "at_annotated_count": {
+    "n_annotations": 397,
+    "n_detections": 397,
+    "n_matched": 168,
+    "n_missed_annotations": 229,
+    "n_unmatched_detections": 229,
+    "annotated_recall": 0.42317380352644834,
+    "annotation_precision_lower_bound": 0.42317380352644834,
+    "f1_vs_annotations": 0.42317380352644834,
+    "count_minus_annotations": 0,
+    "count_ratio": 1.0,
+    "match_dist_median_px": 7.02628754452898,
+    "match_dist_p90_px": 12.45760684673902,
+    "match_radius_px": 15.117754405994354
+   }
+  }
+ }
+}

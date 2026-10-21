@@ -1,0 +1,122 @@
+{
+ "img1.png": {
+  "n_candidates": 13638,
+  "n_model_detections": 1623,
+  "n_duplicate_pairs": 4271,
+  "static_flags_on_model_detections": {
+   "low_clarity": 163,
+   "dense": 34,
+   "near_frame": 21
+  },
+  "simulated_review": [
+   {
+    "budget": 25,
+    "n_model": 1623,
+    "n_model_unmatched": 668,
+    "n_suggestions": 406,
+    "n_suggestions_matching_annotations": 102,
+    "n_queue": 2029,
+    "errors_found_priority": 16,
+    "errors_found_random": 9,
+    "errors_found_random_mean": 8.85,
+    "errors_found_random_sd": 2.7436289836637897
+   },
+   {
+    "budget": 50,
+    "n_model": 1623,
+    "n_model_unmatched": 668,
+    "n_suggestions": 406,
+    "n_suggestions_matching_annotations": 102,
+    "n_queue": 2029,
+    "errors_found_priority": 25,
+    "errors_found_random": 20,
+    "errors_found_random_mean": 18.0,
+    "errors_found_random_sd": 4.171330722922842
+   },
+   {
+    "budget": 100,
+    "n_model": 1623,
+    "n_model_unmatched": 668,
+    "n_suggestions": 406,
+    "n_suggestions_matching_annotations": 102,
+    "n_queue": 2029,
+    "errors_found_priority": 45,
+    "errors_found_random": 35,
+    "errors_found_random_mean": 38.25,
+    "errors_found_random_sd": 5.261891294962297
+   },
+   {
+    "budget": 200,
+    "n_model": 1623,
+    "n_model_unmatched": 668,
+    "n_suggestions": 406,
+    "n_suggestions_matching_annotations": 102,
+    "n_queue": 2029,
+    "errors_found_priority": 95,
+    "errors_found_random": 66,
+    "errors_found_random_mean": 74.95,
+    "errors_found_random_sd": 6.909956584523523
+   }
+  ]
+ },
+ "img2.png": {
+  "n_candidates": 11481,
+  "n_model_detections": 307,
+  "n_duplicate_pairs": 3009,
+  "static_flags_on_model_detections": {
+   "low_clarity": 31,
+   "dense": 0,
+   "near_frame": 1
+  },
+  "simulated_review": [
+   {
+    "budget": 25,
+    "n_model": 307,
+    "n_model_unmatched": 181,
+    "n_suggestions": 77,
+    "n_suggestions_matching_annotations": 25,
+    "n_queue": 384,
+    "errors_found_priority": 19,
+    "errors_found_random": 13,
+    "errors_found_random_mean": 13.0,
+    "errors_found_random_sd": 1.4832396974191326
+   },
+   {
+    "budget": 50,
+    "n_model": 307,
+    "n_model_unmatched": 181,
+    "n_suggestions": 77,
+    "n_suggestions_matching_annotations": 25,
+    "n_queue": 384,
+    "errors_found_priority": 42,
+    "errors_found_random": 31,
+    "errors_found_random_mean": 26.15,
+    "errors_found_random_sd": 3.08666486681013
+   },
+   {
+    "budget": 100,
+    "n_model": 307,
+    "n_model_unmatched": 181,
+    "n_suggestions": 77,
+    "n_suggestions_matching_annotations": 25,
+    "n_queue": 384,
+    "errors_found_priority": 77,
+    "errors_found_random": 57,
+    "errors_found_random_mean": 53.1,
+    "errors_found_random_sd": 3.9987498046264407
+   },
+   {
+    "budget": 200,
+    "n_model": 307,
+    "n_model_unmatched": 181,
+    "n_suggestions": 77,
+    "n_suggestions_matching_annotations": 25,
+    "n_queue": 384,
+    "errors_found_priority": 134,
+    "errors_found_random": 103,
+    "errors_found_random_mean": 106.5,
+    "errors_found_random_sd": 4.3531597719357835
+   }
+  ]
+ }
+}

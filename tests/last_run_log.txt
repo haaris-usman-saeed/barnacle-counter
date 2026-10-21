@@ -1,0 +1,88 @@
+test_bad_corners_rejected (tests.test_app.TestApp.test_bad_corners_rejected) ... ok
+test_busy_server_returns_503 (tests.test_app.TestApp.test_busy_server_returns_503) ... ok
+test_evaluate (tests.test_app.TestApp.test_evaluate) ... ok
+test_index_and_health (tests.test_app.TestApp.test_index_and_health) ... ok
+test_internal_errors_are_generic (tests.test_app.TestApp.test_internal_errors_are_generic) ... 2026-10-21 02:20:59,877 ERROR rid=1a5109e308fe processing failed
+Traceback (most recent call last):
+  File "app.py", line 210, in process
+    payload, records, t = run(img, _MODEL["artifact"], corners=corners, k_calibration=k, name=name)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "tests/test_app.py", line 93, in <lambda>
+    appmod.run = lambda *a, **k: (_ for _ in ()).throw(RuntimeError("secret internal path /srv/x"))
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "tests/test_app.py", line 93, in <genexpr>
+    appmod.run = lambda *a, **k: (_ for _ in ()).throw(RuntimeError("secret internal path /srv/x"))
+RuntimeError: secret internal path /srv/x
+ok
+test_no_frame_returns_preview_for_manual_corners (tests.test_app.TestApp.test_no_frame_returns_preview_for_manual_corners) ... ok
+test_rate_limit (tests.test_app.TestApp.test_rate_limit) ... ok
+test_real_upload_end_to_end (tests.test_app.TestApp.test_real_upload_end_to_end) ... ok
+test_security_headers_and_404 (tests.test_app.TestApp.test_security_headers_and_404) ... ok
+test_unsupported_and_corrupt (tests.test_app.TestApp.test_unsupported_and_corrupt) ... ok
+test_session_round_trip (tests.test_calibration_safeguards.TestExportImport.test_session_round_trip) ... ok
+test_monotone_rates (tests.test_calibration_safeguards.TestIsotonicSafeguard.test_monotone_rates) ... ok
+test_single_low_stratum_error_is_damped (tests.test_calibration_safeguards.TestIsotonicSafeguard.test_single_low_stratum_error_is_damped) ... ok
+test_exact_budget (tests.test_calibration_safeguards.TestSampleSize.test_exact_budget) ... ok
+test_small_population (tests.test_calibration_safeguards.TestSampleSize.test_small_population) ... ok
+test_weights_sum_to_population (tests.test_calibration_safeguards.TestSampleSize.test_weights_sum_to_population) ... ok
+test_keeps_best_of_overlapping (tests.test_duplicates.TestDuplicateSuppression.test_keeps_best_of_overlapping) ... ok
+test_pairs_roundtrip (tests.test_duplicates.TestDuplicateSuppression.test_pairs_roundtrip) ... ok
+test_review_rule_matches_ml_rule (tests.test_duplicates.TestDuplicateSuppression.test_review_rule_matches_ml_rule) ... ok
+test_select_count (tests.test_duplicates.TestDuplicateSuppression.test_select_count) ... ok
+test_separated_points_untouched (tests.test_duplicates.TestDuplicateSuppression.test_separated_points_untouched) ... ok
+test_photos_do_not_match_each_other (tests.test_fingerprint.TestDevelopmentPhotos.test_photos_do_not_match_each_other) ... ok
+test_resized_and_recompressed_copies_are_likely (tests.test_fingerprint.TestDevelopmentPhotos.test_resized_and_recompressed_copies_are_likely) ... ok
+test_shipped_fingerprints_match_the_photos (tests.test_fingerprint.TestDevelopmentPhotos.test_shipped_fingerprints_match_the_photos) ... ok
+test_small_crop_is_at_most_possible_and_never_the_other_photo (tests.test_fingerprint.TestDevelopmentPhotos.test_small_crop_is_at_most_possible_and_never_the_other_photo) ... ok
+test_levels (tests.test_fingerprint.TestSynthetic.test_levels) ... ok
+test_no_refs (tests.test_fingerprint.TestSynthetic.test_no_refs) ... ok
+test_corners_map_to_unit_square (tests.test_frame.TestCoordinateConversions.test_corners_map_to_unit_square) ... ok
+test_inside_tests_agree (tests.test_frame.TestCoordinateConversions.test_inside_tests_agree) ... ok
+test_resolution_invariance (tests.test_frame.TestCoordinateConversions.test_resolution_invariance) ... ok
+test_round_trip (tests.test_frame.TestCoordinateConversions.test_round_trip) ... ok
+test_manual_config_bypasses_and_rescales (tests.test_frame.TestFrameDetection.test_manual_config_bypasses_and_rescales) ... ok
+test_no_frame_raises (tests.test_frame.TestFrameDetection.test_no_frame_raises) ... ok
+test_real_photos_match_recorded_frames (tests.test_frame.TestFrameDetection.test_real_photos_match_recorded_frames) ... ok
+test_synthetic_axis_aligned (tests.test_frame.TestFrameDetection.test_synthetic_axis_aligned) ... ok
+test_synthetic_perspective (tests.test_frame.TestFrameDetection.test_synthetic_perspective) ... ok
+test_boundaries (tests.test_grid.TestAssignment.test_boundaries) ... ok
+test_invalid_grid (tests.test_grid.TestAssignment.test_invalid_grid) ... ok
+test_outside (tests.test_grid.TestAssignment.test_outside) ... ok
+test_selftest_many_grids (tests.test_grid.TestAssignment.test_selftest_many_grids) ... ok
+test_sum_equals_inside_for_random_points (tests.test_grid.TestReconciliation.test_sum_equals_inside_for_random_points) ... ok
+test_calibration_sample_exact (tests.test_inference.TestRealInference.test_calibration_sample_exact) ... ok
+test_coordinates_reconstruct_across_resolution (tests.test_inference.TestRealInference.test_coordinates_reconstruct_across_resolution) ... ok
+test_detections_valid_and_unique (tests.test_inference.TestRealInference.test_detections_valid_and_unique) ... ok
+test_payload_has_no_annotations (tests.test_inference.TestRealInference.test_payload_has_no_annotations) ... ok
+test_training_photo_flag (tests.test_inference.TestRealInference.test_training_photo_flag) ... ok
+test_synthetic_photo (tests.test_inference.TestSyntheticInference.test_synthetic_photo) ... ok
+test_accepts_png_and_jpeg (tests.test_inference.TestUploadValidation.test_accepts_png_and_jpeg) ... ok
+test_header_size_matches_decoder (tests.test_inference.TestUploadValidation.test_header_size_matches_decoder) ... ok
+test_manual_corners_validated (tests.test_inference.TestUploadValidation.test_manual_corners_validated) ... ok
+test_no_frame_raises_frame_error (tests.test_inference.TestUploadValidation.test_no_frame_raises_frame_error) ... ok
+test_rejects_bad_inputs (tests.test_inference.TestUploadValidation.test_rejects_bad_inputs) ... ok
+test_rejects_other_formats_and_bombs (tests.test_inference.TestUploadValidation.test_rejects_other_formats_and_bombs) ... ok
+test_empty (tests.test_matching.TestMatching.test_empty) ... ok
+test_large_random_is_valid (tests.test_matching.TestMatching.test_large_random_is_valid) ... ok
+test_metrics (tests.test_matching.TestMatching.test_metrics) ... ok
+test_one_to_one_and_radius (tests.test_matching.TestMatching.test_one_to_one_and_radius) ... ok
+test_optimal_not_greedy (tests.test_matching.TestMatching.test_optimal_not_greedy) ... ok
+test_horvitz_thompson_close_to_truth (tests.test_reproducibility.TestCalibration.test_horvitz_thompson_close_to_truth) ... ok
+test_platt_threshold_recovers_midpoint (tests.test_reproducibility.TestCalibration.test_platt_threshold_recovers_midpoint) ... ok
+test_blocked_cv_deterministic (tests.test_reproducibility.TestReproducibility.test_blocked_cv_deterministic) ... ok
+test_calibration_sample_deterministic (tests.test_reproducibility.TestReproducibility.test_calibration_sample_deterministic) ... ok
+test_models_deterministic (tests.test_reproducibility.TestReproducibility.test_models_deterministic) ... ok
+test_saved_model_reproduces_phase3_scores (tests.test_reproducibility.TestReproducibility.test_saved_model_reproduces_phase3_scores) ... skipped 'phase3 outputs or cache not present (run run_phase3.py)'
+test_counts_reconcile (tests.test_review.TestCorrections.test_counts_reconcile) ... ok
+test_dashboard_breakdown (tests.test_review.TestCorrections.test_dashboard_breakdown) ... ok
+test_model_set (tests.test_review.TestCorrections.test_model_set) ... ok
+test_remove_keep_add_restore (tests.test_review.TestCorrections.test_remove_keep_add_restore) ... ok
+test_threshold_action_and_overrides_persist (tests.test_review.TestCorrections.test_threshold_action_and_overrides_persist) ... ok
+test_ui_session_replays_identically (tests.test_review.TestCorrections.test_ui_session_replays_identically)
+A session exported by the browser interface (Playwright run against the app, after ... ok
+
+----------------------------------------------------------------------
+Ran 70 tests in 147.572s
+
+OK (skipped=1)
+exit 0

@@ -1,0 +1,81 @@
+{
+ "variant": "C7 C2 features on Hough candidates",
+ "img1.png": {
+  "candidate_positives": 1709,
+  "platt": {
+   "f1": [
+    0.6658722302253094,
+    0.04498265394689402
+   ],
+   "n_det": [
+    1814.6,
+    571.3148343951871
+   ],
+   "n_hat": [
+    1814.7129158086943,
+    571.2848241824532
+   ],
+   "count_abs_rel_error_mean": 0.2709161269275695,
+   "single_flip_max_rel_change_mean": 0.40012799322999754,
+   "single_flip_max_rel_change_worst": 0.6922835779149852,
+   "max_rel_change_after_confirming_flagged_labels": 0.0738781871980351
+  },
+  "isotonic": {
+   "f1": [
+    0.6582732614283813,
+    0.060266194319972745
+   ],
+   "n_det": [
+    1547.05,
+    497.96139157569235
+   ],
+   "n_hat": [
+    1547.0216612363472,
+    497.93220176611885
+   ],
+   "count_abs_rel_error_mean": 0.25186116846701506,
+   "single_flip_max_rel_change_mean": 0.3416232624810855,
+   "single_flip_max_rel_change_worst": 0.6829068283584901,
+   "max_rel_change_after_confirming_flagged_labels": 0.06527617195658038
+  }
+ },
+ "img2.png": {
+  "candidate_positives": 392,
+  "platt": {
+   "f1": [
+    0.37479609773786476,
+    0.07519244199564913
+   ],
+   "n_det": [
+    453.2,
+    404.90821182090144
+   ],
+   "n_hat": [
+    453.1967247645589,
+    404.95687521092225
+   ],
+   "count_abs_rel_error_mean": 0.7772038798574937,
+   "single_flip_max_rel_change_mean": 2.948947216523229,
+   "single_flip_max_rel_change_worst": 15.047291758733577,
+   "max_rel_change_after_confirming_flagged_labels": 0.06705579011335525
+  },
+  "isotonic": {
+   "f1": [
+    0.3642934539497482,
+    0.07586089719360373
+   ],
+   "n_det": [
+    319.95,
+    231.3200110236899
+   ],
+   "n_hat": [
+    319.91074073319334,
+    231.26761953182913
+   ],
+   "count_abs_rel_error_mean": 0.5336924087624408,
+   "single_flip_max_rel_change_mean": 1.145027023304194,
+   "single_flip_max_rel_change_worst": 3.4785923753665693,
+   "max_rel_change_after_confirming_flagged_labels": 0.053184288815987094
+  }
+ }
+}

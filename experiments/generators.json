@@ -1,0 +1,84 @@
+{
+ "img1.png": {
+  "ringlog": {
+   "n_candidates": 13638,
+   "recall_ceiling_r0.25": 0.536106296938186,
+   "recall_ceiling_r0.5": 0.9595609474292317,
+   "median_dist_px": 4.210241081677541,
+   "ceiling_by_density": {
+    "sparse": 0.9719827586206896,
+    "medium": 0.9507640067911715,
+    "dense": 0.9587020648967551
+   },
+   "seconds": 21.40801191329956,
+   "feature_seconds": 9.427117347717285
+  },
+  "hough": {
+   "n_candidates": 10197,
+   "recall_ceiling_r0.25": 0.8769497400346621,
+   "recall_ceiling_r0.5": 0.9872905834777586,
+   "median_dist_px": 2.905063319510447,
+   "ceiling_by_density": {
+    "sparse": 0.9827586206896551,
+    "medium": 0.9881154499151104,
+    "dense": 0.9896755162241888
+   },
+   "seconds": 20.70760464668274,
+   "feature_seconds": 6.750987529754639
+  },
+  "union": {
+   "n_candidates": 17247,
+   "recall_ceiling_r0.25": 0.7019064124783362,
+   "recall_ceiling_r0.5": 0.9971114962449451,
+   "median_dist_px": 3.6272267267884617,
+   "ceiling_by_density": {
+    "sparse": 0.9978448275862069,
+    "medium": 0.9949066213921901,
+    "dense": 0.9985250737463127
+   },
+   "seconds": 22.065682888031006,
+   "feature_seconds": 9.456013441085815
+  }
+ },
+ "img2.png": {
+  "ringlog": {
+   "n_candidates": 11481,
+   "recall_ceiling_r0.25": 0.8236775818639799,
+   "recall_ceiling_r0.5": 1.0,
+   "median_dist_px": 4.804674341687295,
+   "ceiling_by_density": {
+    "sparse": 1.0,
+    "medium": 1.0,
+    "dense": 1.0
+   },
+   "seconds": 20.58055305480957,
+   "feature_seconds": 6.069516897201538
+  },
+  "hough": {
+   "n_candidates": 6865,
+   "recall_ceiling_r0.25": 0.9269521410579346,
+   "recall_ceiling_r0.5": 0.9874055415617129,
+   "median_dist_px": 3.530876752042241,
+   "ceiling_by_density": {
+    "sparse": 0.9770992366412213,
+    "medium": 0.9924242424242424,
+    "dense": 0.9925373134328358
+   },
+   "seconds": 19.703668117523193,
+   "feature_seconds": 4.573101043701172
+  },
+  "union": {
+   "n_candidates": 14853,
+   "recall_ceiling_r0.25": 0.9319899244332494,
+   "recall_ceiling_r0.5": 1.0,
+   "median_dist_px": 4.0837705432969,
+   "ceiling_by_density": {
+    "sparse": 1.0,
+    "medium": 1.0,
+    "dense": 1.0
+   },
+   "seconds": 20.834563732147217,
+   "feature_seconds": 8.973510980606079
+  }
+ }
+}

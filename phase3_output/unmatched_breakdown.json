@@ -1,0 +1,30 @@
+{
+ "img1.png ml": {
+  "n_det": 1623,
+  "n_unmatched": 668,
+  "unmatched_within_1_diam_of_annotation": 508,
+  "unmatched_1_to_2_diam": 139,
+  "unmatched_beyond_2_diam": 21
+ },
+ "img1.png cv": {
+  "n_det": 2956,
+  "n_unmatched": 2723,
+  "unmatched_within_1_diam_of_annotation": 1997,
+  "unmatched_1_to_2_diam": 699,
+  "unmatched_beyond_2_diam": 27
+ },
+ "img2.png ml": {
+  "n_det": 307,
+  "n_unmatched": 181,
+  "unmatched_within_1_diam_of_annotation": 57,
+  "unmatched_1_to_2_diam": 71,
+  "unmatched_beyond_2_diam": 53
+ },
+ "img2.png cv": {
+  "n_det": 59,
+  "n_unmatched": 53,
+  "unmatched_within_1_diam_of_annotation": 10,
+  "unmatched_1_to_2_diam": 27,
+  "unmatched_beyond_2_diam": 16
+ }
+}

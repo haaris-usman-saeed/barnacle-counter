@@ -1,0 +1,220 @@
+{
+ "img1.png": {
+  "annotated_count": 1731,
+  "excluded_records": 0,
+  "kinds": {
+   "closed": 1654,
+   "open": 19,
+   "solid": 32,
+   "merged": 26
+  },
+  "flags": {
+   "touches_frame": 38,
+   "size_outlier_small": 5,
+   "size_outlier_large": 1
+  },
+  "artifacts": {
+   "specks_removed": 29,
+   "isolated_specks": [],
+   "pinholes_filled": 409,
+   "sliver_holes_filled": 14
+  },
+  "roi_xyxy": [
+   1125,
+   462,
+   2550,
+   1923
+  ],
+  "roi_area_px": 2081925,
+  "annotation_density_per_100k_px": 83.14420548290644,
+  "median_equiv_diameter_px": 17.94796937867892,
+  "equiv_diameter_p5_p95_px": [
+   9.933530988536033,
+   28.15300141658652
+  ],
+  "median_nn_spacing_px": 24.984252840935422,
+  "stroke_width_p10_p50_p90_px": [
+   2.0,
+   2.8284271247461903,
+   4.0
+  ],
+  "stroke_colors": {
+   "0": {
+    "rgb": [
+     39,
+     57,
+     191
+    ],
+    "n": 1066,
+    "median_stroke_width_px": 2.8284271247461903,
+    "y_range": [
+     469.7142857142857,
+     1449.3805460750852
+    ]
+   },
+   "1": {
+    "rgb": [
+     59,
+     76,
+     160
+    ],
+    "n": 665,
+    "median_stroke_width_px": 2.8284271247461903,
+    "y_range": [
+     1264.4071661237786,
+     1910.6646153846154
+    ]
+   }
+  },
+  "voids": {
+   "n": 102,
+   "n_frame_adjacent": 17,
+   "n_clearance_ge_1p5_spacing": 21,
+   "n_clearance_ge_2p5_spacing": 4,
+   "fraction_of_evaluable_region": 0.15172593962976774,
+   "evaluable_region_px": 1925386
+  },
+  "annotations_touching_frame": 38,
+  "extraction_info": {
+   "n_components": 1718,
+   "n_holes": 1694,
+   "n_interiors": 1680,
+   "n_slivers_filled": 14,
+   "n_no_interior_components": 51
+  },
+  "overlay_audit": {
+   "x0": 1124,
+   "y0": 470,
+   "w": 1449,
+   "h": 1453,
+   "match_score": 0.8488574028015137,
+   "identical_px_frac": 0.8524169075950997,
+   "painted_px": 310721,
+   "contour_shift_vs_mask_px": {
+    "dx": 0,
+    "dy": 1,
+    "iou": 1.0
+   },
+   "mask_px_outside_crop": 240
+  },
+  "spot_check_patches": [
+   {
+    "x0": 1893,
+    "y0": 1067,
+    "size_px": 148,
+    "annotated": 21
+   },
+   {
+    "x0": 1754,
+    "y0": 1135,
+    "size_px": 148,
+    "annotated": 19
+   }
+  ]
+ },
+ "img2.png": {
+  "annotated_count": 397,
+  "excluded_records": 0,
+  "kinds": {
+   "closed": 395,
+   "open": 1,
+   "solid": 1
+  },
+  "flags": {
+   "touches_frame": 9,
+   "size_outlier_large": 1
+  },
+  "artifacts": {
+   "specks_removed": 124,
+   "isolated_specks": [
+    {
+     "x": 3210.5,
+     "y": 1951.5,
+     "area_px": 4,
+     "dist_to_stroke_px": 676.0266266945408
+    }
+   ],
+   "pinholes_filled": 988,
+   "sliver_holes_filled": 1
+  },
+  "roi_xyxy": [
+   948,
+   232,
+   2579,
+   1860
+  ],
+  "roi_area_px": 2655268,
+  "annotation_density_per_100k_px": 14.95140980119521,
+  "median_equiv_diameter_px": 30.23550881198871,
+  "equiv_diameter_p5_p95_px": [
+   19.498426716980205,
+   43.48580616196728
+  ],
+  "median_nn_spacing_px": 48.02784408330112,
+  "stroke_width_p10_p50_p90_px": [
+   6.0,
+   6.324555320336759,
+   6.324555320336759
+  ],
+  "stroke_colors": {
+   "0": {
+    "rgb": [
+     39,
+     57,
+     191
+    ],
+    "n": 397,
+    "median_stroke_width_px": 6.324555320336759,
+    "y_range": [
+     244.23032407407408,
+     1844.8683431952663
+    ]
+   }
+  },
+  "voids": {
+   "n": 20,
+   "n_frame_adjacent": 8,
+   "n_clearance_ge_1p5_spacing": 7,
+   "n_clearance_ge_2p5_spacing": 1,
+   "fraction_of_evaluable_region": 0.39292805346481696,
+   "evaluable_region_px": 2325866
+  },
+  "annotations_touching_frame": 9,
+  "extraction_info": {
+   "n_components": 397,
+   "n_holes": 396,
+   "n_interiors": 395,
+   "n_slivers_filled": 1,
+   "n_no_interior_components": 2
+  },
+  "overlay_audit": {
+   "x0": 916,
+   "y0": 194,
+   "w": 1691,
+   "h": 1701,
+   "match_score": 0.919607937335968,
+   "identical_px_frac": 0.9004874511149562,
+   "painted_px": 286237,
+   "contour_shift_vs_mask_px": {
+    "dx": 1,
+    "dy": -1,
+    "iou": 1.0
+   },
+   "mask_px_outside_crop": 4
+  },
+  "spot_check_patches": [
+   {
+    "x0": 1046,
+    "y0": 700,
+    "size_px": 288,
+    "annotated": 26
+   },
+   {
+    "x0": 2124,
+    "y0": 727,
+    "size_px": 288,
+    "annotated": 10
+   }
+  ]
+ }
+}

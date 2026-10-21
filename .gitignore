@@ -1,0 +1,29 @@
+# Python artifacts
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+.venv/
+venv/
+
+# Local/editor config and secrets
+.env
+.env.*
+!.env.example
+.DS_Store
+.idea/
+.vscode/
+
+# Development photographs, not needed for the public app
+/data/*
+!/data/README.md
+
+# Regenerable training caches (keep published experiment results)
+/experiments/cache/
+/phase3_output/cache/
+
+# Temporary files
+*.log
+*.tmp

@@ -1,0 +1,8 @@
+# Only the app, the package and the model go into the image.
+*
+!requirements.txt
+!app.py
+!gunicorn.conf.py
+!barnacles/
+!models/
+**/__pycache__
