@@ -230,6 +230,26 @@ Rather than retraining C7 on this additional photograph, I added an **experiment
 
 The second run located many more plausible barnacle centers, with visibly more dots near openings. **136 versus 6 is an increase in selected detections, not proof of improved accuracy.** The new run still appears to miss many barnacles, and without a verified reference count I cannot calculate precision, recall, or count error. It also remains possible that some of the 136 selected points are false positives.
 
+### Automatic routing verified in the deployed app
+
+I also retested both photographs using the updated **Auto-detect photo type** option, without manually selecting either mode. The app found the green quadrat on the full-frame photograph and selected perspective normalization. On the 500 × 500 frame-free close-up, it reported that no green frame was found and automatically chose the native-scale pipeline. The uploaded photos were not added to model training.
+
+| Live upload with Auto mode | Full quadrat | Frame-free close-up |
+|---|---:|---:|
+| Selected processing path | Perspective-normalized quadrat | Native-pixel close-up |
+| Initial selected detections | **1,172** | **136** |
+| Remaining selected detections for review | 1,115 | 131 |
+| Additional unselected suggestions | 293 | 34 |
+| Processing time in this auto-mode run | **21 s** | **3 s** |
+| Reviewer edits / calibration | None | None |
+| Independently verified count | Unavailable | Unavailable |
+
+The counts matched the previously recorded runs for their respective processing paths; processing times varied between runs (earlier: 13 seconds for the quadrat and 2 seconds for the native-scale close-up). These are two different-sized photographs, so their detection totals must **not** be compared as though they represent model accuracy.
+
+![Comparison of selected detections before and after native-scale processing on the same crop](docs/figures/closeup_mode_comparison.svg)
+
+The chart compares **6 selected detections using standard quadrat processing** against **136 using native-scale processing** on the *same close-up*. It shows changed selection behavior, not precision, recall, or verified counting accuracy. The screenshots demonstrate that the automatic routing logic makes the intended selection without the user flipping the processing mode.
+
 ### What I learned from deploying it
 
 This test surfaced a failure that the two development photographs did not reveal: **image framing and object scale are part of the model's input distribution**. The native-scale experiment improved the number and visual coverage of predictions on one close-up, without new training, but it did not establish that the model counts close-ups reliably.
