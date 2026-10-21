@@ -48,7 +48,7 @@ class FrameError(RuntimeError):
 class Limits:
     max_bytes: int = 40 * 1024 * 1024
     max_pixels: int = 60_000_000
-    min_side: int = 600
+    min_side: int = 500
     detect_max_side: int = 3300      # frame detection runs on a copy no larger than this
     formats: tuple = ("png", "jpeg")  # public deployment accepts PNG and JPEG only
 
