@@ -4,7 +4,7 @@ Scientists count barnacles by hand in quadrat photos: a green wire frame laid on
 
 **[Try the live application](https://haaris-usman-saeed-30--barnacle-counter-serve.us-east.modal.run/)** · [Technical report](TECHNICAL_REPORT.md) · [Deployment notes](DEPLOYMENT.md)
 
-The live demo runs on Modal with on-demand startup, so the first visit may take longer. It accepts PNG/JPEG quadrat photographs, and the model's counts are estimates that require review.
+The live demo runs on Modal with on-demand startup, so the first visit may take longer. It accepts PNG/JPEG photographs, including an experimental native-scale mode for small frame-free close-ups; the model's counts are estimates that require review.
 
 The result is a small web app. You upload a quadrat photo; the server finds the frame, corrects the perspective, proposes candidate barnacles, scores them with a trained classifier, and opens the result in a review interface. There you accept, remove or add barnacles, calibrate the model on a few labels from that photo, and export the corrected coordinates and counts.
 
@@ -179,46 +179,59 @@ These are cross-photo results (the model never saw the photo it is scored on), a
 
 Every experiment, the failure analysis and the calibration study are in [`TECHNICAL_REPORT.md`](TECHNICAL_REPORT.md). The full model table is in [`experiments/classifier_table.md`](experiments/classifier_table.md).
 
-## Live prediction on an additional photograph (not used for model development)
+## Applying the solution to additional photographs
 
-After deployment, I uploaded an additional full-frame quadrat photograph to the [live application](https://haaris-usman-saeed-30--barnacle-counter-serve.us-east.modal.run/) and recorded its initial output. This is an inference-only observation, not an accuracy benchmark; this photograph has no independently verified count recorded here.
+To see what the deployed system actually does beyond the two development photographs, I uploaded two additional, previously unused photographs through the [live app](https://haaris-usman-saeed-30--barnacle-counter-serve.us-east.modal.run/). Neither was used to train or select the model. I recorded the **initial model outputs**, without manual corrections or per-photo calibration. These are observations from deployment, **not benchmark accuracy scores**: I do not have exhaustive reference counts for these photographs.
 
-| Measure | Observed result |
+### Test 1 — New full-quadrat photograph
+
+The normal workflow automatically located the green wire frame, rectified the central opening, generated candidate barnacles, and scored them with the trained C7 classifier. In the resulting review screen, I confirmed the frame. The yellow outline followed the central opening, and many selected dots appeared near visible barnacle openings. Some visible openings were not selected.
+
+| Measurement | Observed result |
 |---|---:|
-| Initial selected model detections | **1,172** |
-| Manually removed detections | 0 |
-| Accepted additional suggestions | 0 |
-| Manually added detections | 0 |
-| Displayed corrected count | **1,172** |
+| Mode | Standard quadrat |
+| Server processing time reported in the app | **13 seconds** |
+| Selected model detections | **1,172** |
+| Additional suggestions (not counted) | 293 |
+| Remaining selected detections in review queue | 1,115 |
 | Reviewed items | 0 |
-| Remaining review queue | 1,115 selected detections; 293 unselected suggestions |
-| Calibration | Not performed; default threshold from development photos |
+| Manual removals / accepted suggestions / additions | 0 / 0 / 0 |
+| Displayed count | **1,172 (uncalibrated)** |
 
-**Interpretation:** The model produced 1,172 selected detections on a new input, with another 293 candidates suggested for possible inclusion. No review edits were made, so the displayed “corrected” count remains the initial model count—not a human-verified total. Since no reference count or calibrated estimate is available for this photograph, its true error, precision, and recall are unknown. The result demonstrates that the deployed pipeline returned detections on an additional photograph; it does **not** demonstrate counting accuracy or generalization quantitatively. The photograph was not added to the training or model-selection data.
+The dashboard labels 1,172 as the “corrected count,” but because I made no review edits, it is simply the model's starting count. It should not be interpreted as a verified count.
 
-### Visual check of the live output
+### Test 2 — New 500 × 500 close-up: an unexpected failure
 
-In the screenshot from this additional upload, the app reports a **confirmed frame** and **1,172 selected detections in 13 seconds**. The yellow quadrat outline follows the central frame opening, and many colored detection markers appear near visible barnacle openings. Some nearby openings have no selected marker, and there are unselected suggestions; this is a qualitative visual inspection, not a verified count. No review or calibration was performed.
+The second photograph was a tight crop of barnacles **without a green quadrat frame**. I selected the image area manually and tried the ordinary quadrat processing path. This returned only **6 selected detections and 2 suggestions**, despite many visible barnacles. Expanding a small crop to the same 1600 × 1600 rectified working size as a full quadrat changes the apparent size of each barnacle. That is a plausible source of failure because candidate detection and classification were tuned on full quadrat images, but I have not isolated scale as the sole cause.
 
-### Smaller close-up images (500 × 500 pixels)
+Rather than retraining C7 on this additional photograph, I added an optional **experimental native-scale close-up mode** and tried the same crop again.
 
-The app accepts PNG and JPEG images whose shortest side is **at least 500 pixels**. Photographs without a visible green quadrat frame need an area specified manually: after upload, click the four corners around the area you want counted, in top-left, top-right, bottom-right, bottom-left order. For a cropped close-up, choose points near the four image corners.
+**How I applied the proposed fix:**
 
-The detector was designed and trained on larger framed quadrat images. Cropped close-ups can have a different apparent barnacle scale after rectification, so their predictions should be treated as exploratory estimates, not validated performance.
+1. The new mode treats the **entire uploaded crop** as the counting area; it does not require a green quadrat.
+2. Instead of stretching a 500 × 500 crop to 1600 × 1600, the pipeline preserves the image at **its original pixel resolution**.
+3. An **88-pixel reflected border** supplies context for local filters without creating a large black canvas or artificial high-contrast black edges. The extra border is not part of the counted area.
+4. Candidate locations are restricted to the original crop and mapped directly back to its pixel coordinates. The app uses the **same saved C7 classifier and threshold**, with no additional training.
+5. Standard full-quadrat processing remains a separate, unchanged mode.
 
-**Observed failure on an additional 500 × 500 close-up.** In a separate live upload of a cropped barnacle photograph without the original quadrat frame, the app returned **6 selected detections** and **2 suggestions in the review queue**, with no calibration or manual edits. Its displayed “corrected count” was therefore **6**, but that is only the unchanged model output. Visual inspection shows many more barnacles than six, so the result is a clear qualitative undercount. There is no exhaustive reference annotation for this close-up, so a numerical error percentage or recall cannot be calculated. The two suggestions reported by the interface are review suggestions, not necessarily the entire set of model-generated candidates.
+| Measurement | Original quadrat processing | Native-scale close-up mode |
+|---|---:|---:|
+| Input | Same 500 × 500 crop | Same 500 × 500 crop |
+| Selected model detections | **6** | **136** |
+| Extra suggestions (not counted) | 2 | 34 |
+| Remaining selected detections in review queue | 6 | 131 |
+| Server processing time reported | Not recorded | **2 seconds** |
+| Reviewed items | 0 | 0 |
+| Manual removals / accepted suggestions / additions | 0 / 0 / 0 | 0 / 0 / 0 |
+| Displayed count | 6 (uncalibrated) | **136 (uncalibrated)** |
 
-This suggests a significant limitation when transferring from full quadrats to tight close-ups: after every selected area is rectified to 1600 × 1600 pixels, the relevant barnacle sizes can shift outside the scale distribution and features the detector learned. It is a plausible explanation, **not a diagnosed single root cause**. Simply allowing smaller uploaded files does not fix this model mismatch. The photo was not used for training or model selection, and the poor result is included here deliberately.
+The second run located many more plausible barnacle centers, with visibly more dots near openings. **136 versus 6 is an increase in selected detections, not proof of improved accuracy.** The new run still appears to miss many barnacles, and without a verified reference count I cannot calculate precision, recall, or count error. It also remains possible that some of the 136 selected points are false positives.
 
-### Experimental native-scale close-up mode
+### What I learned from deploying it
 
-The upload interface now has an optional **Experimental close-up mode** for small photographs without a visible quadrat frame. This mode treats the full crop as the counting area and **preserves its original pixel scale** instead of stretching 500×500 pixels to the usual 1600×1600 rectified area.
+This test surfaced a failure that the two development photographs did not reveal: **image framing and object scale are part of the model's input distribution**. The native-scale experiment improved the number and visual coverage of predictions on one close-up, without new training, but it did not establish that the model counts close-ups reliably.
 
-It processes the actual crop with an 88-pixel *reflected* context margin. This avoids a huge black canvas and prevents artificial black borders from being mistaken for features. Candidate centers outside the original crop are excluded; detection coordinates map directly back to the original pixels. The existing full-quadrat mode remains unchanged.
-
-**How to try it:** For an image between 500 and 1200 pixels on each side, check **Experimental close-up mode**, upload, and process. You do not need to mark four corners. Turn off the checkbox for regular quadrat photographs. The mode uses the existing trained C7 detector **without retraining**; its performance on new close-ups has not yet been independently evaluated.
-
-The earlier close-up result of **6 selected detections and 2 suggestions** was recorded using the regular quadrat mode, before native-scale processing. It remains an honest failure case, not a metric of the new mode. Any new count should be documented separately after testing and should not be called accurate without exhaustive reference labels.
+The user interface therefore exposes both processing modes, retains the review queue, and labels uncalibrated counts as estimates. For close-ups, the grid organizes relative positions within the crop; it is **not** a physical quadrat or an area-density measurement. I would next validate the approach on several independent close-ups with exhaustive point annotations before making stronger performance claims.
 
 ## Honest limitations
 
@@ -227,7 +240,7 @@ The earlier close-up result of **6 selected detections and 2 suggestions** was r
 - **Annotations define the target.** The masks skip empty shells, and the second photo is incompletely annotated, so measured recall and precision follow that policy.
 - **The deployed model saw both photos.** It is trained on both development photos, so processing either of them in the app gives optimistic results. The app warns: definitively for exact copies, and as a "likely" match for resized or recompressed ones. Crops and strong edits may not be recognized.
 - **Dense clusters lose recall.** About 1% to 2% of annotations are never proposed as candidates.
-- **Tight close-ups can fail badly.** An additional 500 × 500 crop received only 6 selected detections despite many visible barnacles. Scale and appearance transfer to crops have not been solved.
+- **Tight close-ups remain difficult.** An additional 500 × 500 crop produced 6 detections in standard mode and 136 in experimental native-scale mode. This improved visual coverage but remains an apparent undercount, with no verified accuracy measurement.
 
 ## Run it
 
