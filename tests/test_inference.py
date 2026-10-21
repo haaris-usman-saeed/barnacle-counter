@@ -32,6 +32,17 @@ class TestUploadValidation(unittest.TestCase):
             decode_image(png(np.zeros((700, 700, 3), np.uint8)), Limits(max_bytes=10))
         self.assertEqual(e.exception.status, 413)
 
+    def test_accepts_500_square_and_rejects_499(self):
+        """Small cropped photos are valid uploads; frame detection is separate."""
+        small = np.zeros((500, 500, 3), np.uint8)
+        out, kind = decode_image(png(small))
+        self.assertEqual(out.shape, (500, 500, 3))
+        self.assertEqual(kind, "png")
+        frame = find_frame(out, corners=[[0, 0], [499, 0], [499, 499], [0, 499]])
+        self.assertEqual(frame.source, "manual")
+        with self.assertRaises(InputError):
+            decode_image(png(np.zeros((499, 500, 3), np.uint8)))
+
     def test_rejects_other_formats_and_bombs(self):
         img = np.zeros((700, 900, 3), np.uint8)
         for ext in (".tiff", ".bmp"):
