@@ -5,7 +5,7 @@ import cv2
 import numpy as np
 
 from tests.helpers import ROOT, DATA, HAVE_DATA, synthetic_quadrat
-from barnacles.inference import (InputError, FrameError, Limits, decode_image, find_frame, run, load_artifact,
+from barnacles.inference import (InputError, FrameError, Limits, decode_image, find_frame, choose_frame_and_mode, run, load_artifact,
                                  DEFAULT_ARTIFACT, header_size)
 from barnacles.grid import GridSpec, assign
 
@@ -42,6 +42,21 @@ class TestUploadValidation(unittest.TestCase):
         self.assertEqual(frame.source, "manual")
         with self.assertRaises(InputError):
             decode_image(png(np.zeros((499, 500, 3), np.uint8)))
+
+    def test_auto_mode_routes_small_unframed_photo_to_native(self):
+        img = np.random.default_rng(222).integers(0, 255, (500, 500, 3), dtype=np.uint8)
+        f, mode, reason = choose_frame_and_mode(img)
+        self.assertEqual((mode, f.source), ("native", "crop"))
+        self.assertIn("Automatically", reason)
+        f2, mode2, _ = choose_frame_and_mode(img, mode="native")
+        self.assertEqual((mode2, f2.source), ("native", "crop"))
+        with self.assertRaises(InputError):
+            choose_frame_and_mode(img, mode="unknown")
+
+    def test_auto_does_not_silently_crop_large_unframed_photo(self):
+        img = np.random.default_rng(223).integers(0, 255, (1400, 1400, 3), dtype=np.uint8)
+        with self.assertRaises(FrameError):
+            choose_frame_and_mode(img)
 
     def test_500_px_png_and_native_coordinate_mapping(self):
         from barnacles.rectify import native_rectify
