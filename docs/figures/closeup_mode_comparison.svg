@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1060" height="470" viewBox="0 0 1060 470" role="img" aria-labelledby="title desc">
+<title id="title">Selected detections on the same 500 by 500 close-up</title>
+<desc id="desc">Standard quadrat mode selected 6 detections; automatic native-scale close-up mode selected 136 detections. These are model-selected counts, not verified accurate barnacle counts.</desc>
+<rect width="1060" height="470" rx="20" fill="#152023"/>
+<text x="45" y="62" fill="#ecf4f3" font-size="29" font-family="Arial,Helvetica,sans-serif" font-weight="700">The same 500 × 500 close-up, two processing paths</text>
+<text x="45" y="96" fill="#b0c6c5" font-size="18" font-family="Arial,Helvetica,sans-serif">Model-selected detections · same saved C7 model · no calibration or manual review</text>
+<line x1="306" y1="136" x2="306" y2="346" stroke="#728e8e" stroke-width="2"/>
+<line x1="306" y1="346" x2="952" y2="346" stroke="#728e8e" stroke-width="2"/>
+<g fill="#a2bbba" font-size="16" font-family="Arial,Helvetica,sans-serif">
+<text x="306" y="373" text-anchor="middle">0</text><text x="466" y="373" text-anchor="middle">40</text><text x="626" y="373" text-anchor="middle">80</text><text x="786" y="373" text-anchor="middle">120</text><text x="946" y="373" text-anchor="middle">160</text>
+</g>
+<g stroke="#365256" stroke-width="1" stroke-dasharray="3 7"><line x1="466" y1="136" x2="466" y2="346"/><line x1="626" y1="136" x2="626" y2="346"/><line x1="786" y1="136" x2="786" y2="346"/><line x1="946" y1="136" x2="946" y2="346"/></g>
+<g font-size="19" font-family="Arial,Helvetica,sans-serif" fill="#e7eeee">
+<text x="45" y="193">Standard quadrat</text><text x="45" y="217" font-size="15" fill="#a2bbba">Stretched crop</text>
+<text x="45" y="289">Auto-selected close-up</text><text x="45" y="314" font-size="15" fill="#a2bbba">Native pixel scale</text>
+</g>
+<rect x="306" y="159" width="24" height="64" rx="4" fill="#cc9951"/>
+<rect x="306" y="257" width="544" height="64" rx="5" fill="#59bcb7"/>
+<text x="344" y="199" fill="#f7d9a7" font-family="Arial,Helvetica,sans-serif" font-size="26" font-weight="700">6</text>
+<text x="868" y="298" fill="#ecf4f3" font-family="Arial,Helvetica,sans-serif" font-size="26" font-weight="700">136</text>
+<text x="45" y="419" fill="#c5d5d4" font-family="Arial,Helvetica,sans-serif" font-size="17">More selected detections does not establish accuracy. No independent reference count is available.</text>
+</svg>
