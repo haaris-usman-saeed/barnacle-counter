@@ -185,26 +185,54 @@ def features_for(rect, c, maps, art):
     return X
 
 
-def run(img, art, corners=None, k_calibration=80, seed=0, limits: Limits = Limits(), name="upload", mode="quadrat"):
+def choose_frame_and_mode(img, corners=None, mode="auto", limits: Limits = Limits()):
+    """Choose the counting geometry using only the uploaded pixels.
+
+    Prefer a detected quadrat. If no quadrat is found in a small photo,
+    preserve its original pixel scale and count the entire crop instead.
+    Larger photos without a detectable frame still need four manual corners.
+    Explicit mode overrides and manual corners take precedence.
+    """
+    if mode not in ("auto", "quadrat", "native"):
+        raise InputError("mode must be 'auto', 'quadrat', or 'native'.")
+
+    h, w = img.shape[:2]
+    if mode == "native":
+        if corners is not None:
+            raise InputError("Close-up mode uses the whole photograph; omit manual corners or use quadrat mode.")
+        if max(w, h) > 1200:
+            raise InputError("Native close-up mode accepts images up to 1200 px per side.")
+    elif mode == "quadrat" or corners is not None:
+        return find_frame(img, corners, limits), "quadrat", (
+            "The selected counting area uses the quadrat/marked-corners workflow.")
+
+    else:
+        try:
+            frame = find_frame(img, None, limits)
+            return frame, "quadrat", "Green quadrat frame found; perspective normalized."
+        except FrameError:
+            if max(w, h) > 1200:
+                raise  # do not silently treat a large frame-free photo as one quadrat
+
+    frame = Frame(
+        np.array([[0, 0], [w - 1, 0], [w - 1, h - 1], [0, h - 1]], float),
+        (w, h), "crop",
+        {"warnings": ["No physical quadrat frame: the entire crop is the counting area. "
+                       "Native-scale results are experimental and require review."]})
+    reason = ("Automatically selected native-scale close-up because no green frame was found."
+              if mode == "auto" else "Native-scale close-up explicitly selected.")
+    return frame, "native", reason
+
+
+def run(img, art, corners=None, k_calibration=80, seed=0, limits: Limits = Limits(), name="upload", mode="auto"):
     """Process one photo. Returns (payload for the viewer, detection records, timings)."""
     t = {}
     t0 = time.time()
-    if mode == "native":
-        if corners is not None:
-            raise InputError("Native close-up mode uses the whole photograph; do not supply frame corners.")
-        h, w = img.shape[:2]
-        if max(h, w) > 1200:
-            raise InputError("Native close-up mode accepts images up to 1200 px per side. Use quadrat mode for larger photographs.")
-        frame = Frame(np.array([[0, 0], [w - 1, 0], [w - 1, h - 1], [0, h - 1]], float),
-                      (w, h), "crop", {"warnings": ["Experimental close-up mode; whole crop is the counting area; no physical quadrat detected."]})
-    elif mode == "quadrat":
-        frame = find_frame(img, corners, limits)
-    else:
-        raise InputError("mode must be 'quadrat' or 'native'.")
+    frame, chosen_mode, mode_reason = choose_frame_and_mode(img, corners, mode, limits)
     t["frame_s"] = time.time() - t0
     t0 = time.time()
     rect = (native_rectify(img, frame, size=art["rect_size"])
-            if mode == "native" else rectify(img, frame, size=art["rect_size"]))
+            if chosen_mode == "native" else rectify(img, frame, size=art["rect_size"]))
     c, maps = generate(rect, art)
     t["candidates_s"] = time.time() - t0
     if len(c["x"]) == 0:
@@ -239,7 +267,9 @@ def run(img, art, corners=None, k_calibration=80, seed=0, limits: Limits = Limit
     payload = viewer_payload(img, frame, name, ids, xy, uv, r, score, sig, dup, thr, sidx, sw, sstrat, art)
     payload["timing_s"] = {k: round(v, 2) for k, v in t.items()}
     payload["image_size"] = [int(img.shape[1]), int(img.shape[0])]
-    payload["processing_mode"] = mode
+    payload["processing_mode"] = chosen_mode
+    payload["mode_reason"] = mode_reason
+    payload["mode_requested"] = mode
     payload["training_photo"] = recognize(img)      # None, or {level, photo, message, definitive, evidence}
     return payload, records, t
 
