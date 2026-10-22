@@ -248,6 +248,13 @@ The counts matched the previously recorded runs for their respective processing 
 
 ![Comparison of selected detections before and after native-scale processing on the same crop](docs/figures/closeup_mode_comparison.svg)
 
+**Live auto-mode screenshots**
+
+![Auto-mode selected native-scale processing on the 500×500 close-up, 136 selected detections](docs/screenshots/auto_closeup_136.png)
+
+![Auto-mode detected the green quadrat and returned 1,172 selected detections](docs/screenshots/auto_quadrat_1172.png)
+
+
 The chart compares **6 selected detections using standard quadrat processing** against **136 using native-scale processing** on the *same close-up*. It shows changed selection behavior, not precision, recall, or verified counting accuracy. The screenshots demonstrate that the automatic routing logic makes the intended selection without the user flipping the processing mode.
 
 ### What I learned from deploying it
