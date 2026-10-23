@@ -87,7 +87,7 @@ table.m th:first-child, table.m td:first-child { text-align: left; }
     <section id="upsec" hidden>
       <h2>Process a photo</h2>
       <input type="file" id="file" accept="image/png,image/jpeg">
-      <label style="display:block;margin:10px 0">Processing: <select id="processingmode"><option value="auto" selected>Auto-detect photo type (recommended)</option><option value="quadrat">Force quadrat / manual corners</option><option value="native">Force native-scale close-up (up to 1200px)</option></select></label>
+      <label style="display:block;margin:10px 0">Processing: <select id="processingmode"><option value="auto" selected>Auto-detect photo type (recommended)</option><option value="quadrat">Force quadrat / manual corners</option><option value="detail">Experimental 2x detail (large quadrat, slow)</option><option value="native">Force native-scale close-up (up to 1200px)</option></select></label>
       <div class="row"><button class="btn primary" id="proc">Process photo</button></div>
       <p class="small" id="upstatus">PNG or JPEG, up to 40 MB and 60 megapixels. Processing takes about 30 seconds.</p>
     </section>
