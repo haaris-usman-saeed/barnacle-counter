@@ -179,22 +179,6 @@ These are cross-photo results (the model never saw the photo it is scored on), a
 
 Every experiment, the failure analysis and the calibration study are in [`TECHNICAL_REPORT.md`](TECHNICAL_REPORT.md). The full model table is in [`experiments/classifier_table.md`](experiments/classifier_table.md).
 
-## High-resolution photographs: experimental tiled detail pass
-
-A large uploaded photo is not cropped down to 1600×1600. The app first detects the **actual quadrat** at a bounded frame-detection resolution and maps those frame corners back to the original pixels. Standard inference perspective-normalizes that quadrat to a 1600×1600 reference image.
-
-**This feature is now OFF by default.** Following a report of markedly slower processing and unreliable counts, high-resolution tiling requires manually selecting **Experimental 2x detail (large quadrat, slow)**. Standard Auto mode no longer activates it. The source of the inaccurate count on that particular image has not been confirmed.
-
-For a detected quadrat whose **average frame-side footprint is at least 2400 source pixels**, an explicitly requested experiment adds a **bounded second pass at 3200×3200**, divided into four 1600×1600 processing cores. Each core includes an 88-pixel margin of real neighboring image content, including across tile seams. The original 1600 reference pass remains in the result. Both passes use the existing saved classifier; candidates from every tile are transformed back into source-photo coordinates and subjected to **one global radius-based duplicate suppression** before they are counted.
-
-- **Why tile?** It preserves finer visual detail without computing the expensive multiscale detector over one huge image at once.
-- **Why keep the original pass?** It may recognize larger openings that would be missed by a finer-scale-only pass.
-- **Why the cap?** Only one 3200-square perspective warp and four sequential tile analyses are used; this is not unlimited-resolution processing. The upload limits remain 40 MB and 60 MP.
-- **How to opt out:** Use the default **Auto-detect photo type** setting, or **Force quadrat / manual corners**, rather than selecting **Experimental 2x detail**.
-- **Caveat:** The 2400-pixel cutoff and 2× detail scale are engineering choices, **not optimized performance parameters**. This change was not tested against a new exhaustive ground-truth count; it can increase false positives, runtime, and memory usage. The model was *not retrained*. Accuracy improvements have not been established.
-
-The high-resolution pass is different from **native-scale close-up mode**, which is reserved for small unframed crops. Larger frame-free photographs still request manual corners rather than silently assuming the whole image is one physical quadrat.
-
 ## Applying the solution to additional photographs
 
 **A design oversight I corrected.** I knew from the outset that incoming photos could have different pixel dimensions, and that some photos might not have a clearly detectable quadrat. The pipeline handled varying input dimensions and allowed manually marking frame corners. However, I initially treated every selected counting region as if it should be rescaled to the same **1600 × 1600 working area**. That 1600-pixel size was an internal normalization, **not the original dimensions of the training photographs**. I had not accounted for how strongly rescaling a tightly cropped photo would change the apparent barnacle sizes. The close-up test exposed this weakness, and only afterward did I add the native-scale alternative. This improvement was informed by the additional photo; it is not evidence from an independent evaluation of the revised method.

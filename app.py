@@ -190,8 +190,8 @@ def process():
     except (ValueError, TypeError):
         return error("corners must be four [x, y] number pairs: top-left, top-right, bottom-right, bottom-left.", 400)
     mode = request.form.get("mode") or "auto"
-    if mode not in ("auto", "quadrat", "native", "detail"):
-        return error("mode must be auto, quadrat, native or detail.", 400)
+    if mode not in ("auto", "quadrat", "native"):
+        return error("mode must be auto, quadrat or native.", 400)
     try:
         k = int(request.form.get("k") or 80)
         if not 10 <= k <= 400:
