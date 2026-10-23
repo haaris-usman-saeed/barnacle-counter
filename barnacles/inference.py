@@ -194,8 +194,8 @@ def choose_frame_and_mode(img, corners=None, mode="auto", limits: Limits = Limit
     Larger photos without a detectable frame still need four manual corners.
     Explicit mode overrides and manual corners take precedence.
     """
-    if mode not in ("auto", "quadrat", "native"):
-        raise InputError("mode must be 'auto', 'quadrat', or 'native'.")
+    if mode not in ("auto", "quadrat", "native", "detail"):
+        raise InputError("mode must be 'auto', 'quadrat', 'native', or 'detail'.")
 
     h, w = img.shape[:2]
     if mode == "native":
@@ -203,9 +203,13 @@ def choose_frame_and_mode(img, corners=None, mode="auto", limits: Limits = Limit
             raise InputError("Close-up mode uses the whole photograph; omit manual corners or use quadrat mode.")
         if max(w, h) > 1200:
             raise InputError("Native close-up mode accepts images up to 1200 px per side.")
-    elif mode == "quadrat" or corners is not None:
-        return find_frame(img, corners, limits), "quadrat", (
-            "The selected counting area uses the quadrat/marked-corners workflow.")
+    elif mode in ("quadrat", "detail") or corners is not None:
+        frame = find_frame(img, corners, limits)
+        if mode == "detail":
+            if not use_detail(frame):
+                raise InputError("Experimental high-resolution mode needs a quadrat whose average photographed side is at least 2400 px. Use Auto for smaller photos.")
+            return frame, "quadrat", "Experimental 2x high-resolution detail pass explicitly requested; predictions need review."
+        return frame, "quadrat", "The selected counting area uses the quadrat/marked-corners workflow."
 
     else:
         try:
@@ -250,10 +254,11 @@ def run(img, art, corners=None, k_calibration=80, seed=0, limits: Limits = Limit
     uv = rect.rect_to_uv(np.c_[c["x"], c["y"]])
     r = c["radius"] * s_px
 
+    # Explicitly opt-in ONLY. Do not launch expensive, unvalidated tiling on ordinary Auto uploads.
     # Optional high-detail pass: four 1600px cores of a 3200px quadrat warp.
     # Both scales are mapped back to raw pixels BEFORE global duplicate suppression.
     detail_count = 0
-    if chosen_mode == "quadrat" and mode == "auto" and use_detail(frame):
+    if chosen_mode == "quadrat" and mode == "detail":
         t0 = time.time()
         all_xy, all_uv, all_r, all_score, all_cv = [xy], [uv], [r], [score], [c["score"]]
         for tile in iter_detail_tiles(img, frame):
