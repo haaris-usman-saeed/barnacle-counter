@@ -22,6 +22,7 @@ import numpy as np
 
 from .frame import Frame, detect, CORNER_NAMES
 from .rectify import rectify, native_rectify
+from .hires import iter_detail_tiles, use_detail
 from .candidate_detection import CandidateParams, score_maps, detect_candidates, hough_candidates, merge_candidates
 from .features import candidate_features
 from .ml import DuplicateIndex, select
@@ -248,6 +249,45 @@ def run(img, art, corners=None, k_calibration=80, seed=0, limits: Limits = Limit
     xy = rect.rect_to_image(np.c_[c["x"], c["y"]])
     uv = rect.rect_to_uv(np.c_[c["x"], c["y"]])
     r = c["radius"] * s_px
+
+    # Optional high-detail pass: four 1600px cores of a 3200px quadrat warp.
+    # Both scales are mapped back to raw pixels BEFORE global duplicate suppression.
+    detail_count = 0
+    if chosen_mode == "quadrat" and mode == "auto" and use_detail(frame):
+        t0 = time.time()
+        all_xy, all_uv, all_r, all_score, all_cv = [xy], [uv], [r], [score], [c["score"]]
+        for tile in iter_detail_tiles(img, frame):
+            tc, tmaps = generate(tile, art)
+            if not len(tc["x"]):
+                del tmaps
+                continue
+            owner = tile.in_core(tc["x"], tc["y"])
+            if not owner.any():
+                del tmaps
+                continue
+            # Limit processing to the core-owner candidates; context remains.
+            tc = {key: values[owner] for key, values in tc.items()}
+            tx = features_for(tile, tc, tmaps, art)
+            del tmaps
+            ts = art["model"].predict_proba(tx)[:, 1]
+            txy = tile.rect_to_image(np.c_[tc["x"], tc["y"]])
+            tuv = tile.rect_to_uv(np.c_[tc["x"], tc["y"]])
+            valid = (tuv >= 0).all(axis=1) & (tuv <= 1).all(axis=1)
+            all_xy.append(txy[valid])
+            all_uv.append(tuv[valid])
+            all_r.append(tc["radius"][valid] * tile.px_per_rect_px())
+            all_score.append(ts[valid])
+            all_cv.append(tc["score"][valid])
+            detail_count += int(valid.sum())
+            del tx
+        xy = np.concatenate(all_xy)
+        uv = np.concatenate(all_uv)
+        r = np.concatenate(all_r)
+        score = np.concatenate(all_score)
+        cv_score = np.concatenate(all_cv)
+        t["detail_s"] = time.time() - t0
+    else:
+        cv_score = c["score"]
     dup = DuplicateIndex(xy, r, art["dup_frac"])
     thr = float(art["default_threshold"])
     mset = select(dup, score, thr)
@@ -255,7 +295,7 @@ def run(img, art, corners=None, k_calibration=80, seed=0, limits: Limits = Limit
     sidx, sw, sstrat = stratified_sample(score, k_calibration, rng)
     acc = np.zeros(len(xy), bool)
     acc[mset] = True
-    sig = static_signals(cv2.cvtColor(img, cv2.COLOR_BGR2GRAY), frame, xy[:, 0], xy[:, 1], r, acc, c["score"])
+    sig = static_signals(cv2.cvtColor(img, cv2.COLOR_BGR2GRAY), frame, xy[:, 0], xy[:, 1], r, acc, cv_score)
     spec = GridSpec(10, 10)
     rr, cc, ins = assign(uv, spec)
     ids = [f"{name}_d{i:05d}" for i in range(len(xy))]
@@ -270,6 +310,7 @@ def run(img, art, corners=None, k_calibration=80, seed=0, limits: Limits = Limit
     payload["processing_mode"] = chosen_mode
     payload["mode_reason"] = mode_reason
     payload["mode_requested"] = mode
+    payload["high_resolution"] = {"enabled": detail_count > 0, "detail_candidates": detail_count, "method": "1600px reference + four 1600px detail cores at 3200px, global duplicate suppression"}
     payload["training_photo"] = recognize(img)      # None, or {level, photo, message, definitive, evidence}
     return payload, records, t
 
